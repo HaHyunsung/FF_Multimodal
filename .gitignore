@@ -1,0 +1,30 @@
+# Data files (too large for git)
+data/
+*.csv
+
+# Model checkpoints
+checkpoints/
+*.pt
+*.pth
+
+# Results
+results/
+
+# Python
+__pycache__/
+*.pyc
+.ipynb_checkpoints/
+
+# IDE
+.vscode/
+.idea/
+
+# OS
+.DS_Store
+Thumbs.db
+
+# Claude
+.claude/
+
+# PDF (reference paper)
+*.pdf
