@@ -1,0 +1,71 @@
+if HAS_IMAGES:
+    # 멀티모달 데이터 생성: cycle state 4,9 시점의 센서 시퀀스 + 이미지
+    def create_multimodal_data(data_df, img_df, sensor_cols, seq_len):
+        # img_df에서 cam1_path lookup 테이블 생성
+        img_lookup = {}
+        for _, row in img_df.iterrows():
+            key = (row["Cycle_Count_New"], row["CycleState"])
+            if key not in img_lookup:
+                img_lookup[key] = row["cam1_path"]
+
+        X_seq, img_paths, labels = [], [], []
+        for cycle_id, group in data_df.groupby("Cycle_Count_New"):
+            values = group[sensor_cols].values.astype(np.float32)
+            lbl = group["label_encoded"].values
+            states = group["CycleState"].values
+            if len(values) < seq_len:
+                continue
+            for i in range(len(values) - seq_len):
+                t = i + seq_len
+                if states[t] in [4, 9]:
+                    X_seq.append(values[i:i + seq_len])
+                    labels.append(lbl[t])
+                    path = img_lookup.get((cycle_id, states[t]))
+                    img_paths.append(path)
+        return np.array(X_seq), img_paths, np.array(labels)
+
+    print("Creating multimodal dataset...")
+    X_train_mm, img_train, y_train_mm = create_multimodal_data(
+        train_df, df_img_train, SENSOR_COLUMNS, SEQUENCE_LENGTH
+    )
+    X_test_mm, img_test, y_test_mm = create_multimodal_data(
+        test_df, df_img_test, SENSOR_COLUMNS, SEQUENCE_LENGTH
+    )
+    print(f"Train: {X_train_mm.shape}, images: {sum(1 for p in img_train if p)}")
+    print(f"Test:  {X_test_mm.shape}, images: {sum(1 for p in img_test if p)}")
+
+    train_mm_ds = MultimodalDataset(X_train_mm, img_train, y_train_mm, train_transform)
+    test_mm_ds = MultimodalDataset(X_test_mm, img_test, y_test_mm, test_transform)
+    train_mm_loader = DataLoader(train_mm_ds, batch_size=BATCH_SIZE, shuffle=True, num_workers=2)
+    test_mm_loader = DataLoader(test_mm_ds, batch_size=BATCH_SIZE, num_workers=2)
+
+    # Fusion 데이터셋(cycle 4·9 시점) 분포 기반 class weight
+    # (센서 전체 분포와 다르므로 fusion 전용으로 재계산해 두 모델에 동일 적용)
+    mm_counter = Counter(y_train_mm.tolist())
+    mm_total = sum(mm_counter.values())
+    mm_class_weights = torch.FloatTensor([
+        mm_total / (NUM_CLASSES * mm_counter.get(i, 1)) for i in range(NUM_CLASSES)
+    ])
+    mm_class_weights = mm_class_weights / mm_class_weights.sum() * NUM_CLASSES
+    print(f"Fusion class dist: {dict(mm_counter)}")
+    print(f"Fusion class weights: {mm_class_weights.tolist()}")
+
+    # --- (baseline) Decision-Level Concat Fusion ---
+    fusion_model = MultimodalFusion(sensor_input_dim=NUM_SENSOR_FEATURES).to(DEVICE)
+    fusion_result, fusion_history = run_training(
+        fusion_model, train_mm_loader, test_mm_loader,
+        model_type="fusion", model_name="fusion_dlf",
+        custom_class_weights=mm_class_weights,
+    )
+
+    # --- (개선 Ⓐ) Cross-Attention Fusion ---
+    fusion_attn_model = CrossAttentionFusion(sensor_input_dim=NUM_SENSOR_FEATURES).to(DEVICE)
+    fusion_attn_result, fusion_attn_history = run_training(
+        fusion_attn_model, train_mm_loader, test_mm_loader,
+        model_type="fusion", model_name="fusion_crossattn",
+        custom_class_weights=mm_class_weights,
+    )
+else:
+    print("[SKIP] No image data. Fusion model requires images.")
+    fusion_result, fusion_history = None, None
+    fusion_attn_result, fusion_attn_history = None, None

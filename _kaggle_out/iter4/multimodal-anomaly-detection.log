@@ -1,0 +1,288 @@
+[{"stream_name":"stderr","time":8.03684291,"data":"0.00s - Debugger warning: It seems that frozen modules are being used, which may\n"}
+,{"stream_name":"stderr","time":8.036935249,"data":"0.00s - make the debugger miss breakpoints. Please pass -Xfrozen_modules=off\n"}
+,{"stream_name":"stderr","time":8.036940165,"data":"0.00s - to python to disable frozen modules.\n"}
+,{"stream_name":"stderr","time":8.036942943,"data":"0.00s - Note: Debugging will proceed. Set PYDEVD_DISABLE_FILE_VALIDATION=1 to disable this validation.\n"}
+,{"stream_name":"stderr","time":8.696248404,"data":"0.00s - Debugger warning: It seems that frozen modules are being used, which may\n"}
+,{"stream_name":"stderr","time":8.696278903,"data":"0.00s - make the debugger miss breakpoints. Please pass -Xfrozen_modules=off\n"}
+,{"stream_name":"stderr","time":8.696282523,"data":"0.00s - to python to disable frozen modules.\n"}
+,{"stream_name":"stderr","time":8.696286034,"data":"0.00s - Note: Debugging will proceed. Set PYDEVD_DISABLE_FILE_VALIDATION=1 to disable this validation.\n"}
+,{"stream_name":"stdout","time":23.509595548,"data":"Device: cuda\n"}
+,{"stream_name":"stdout","time":23.509671541,"data":"GPU: Tesla T4\n"}
+,{"stream_name":"stdout","time":104.11693419,"data":"CSV found: /kaggle/input/datasets/hyunsungha/ff-multimodal-csv/FF_Multimodal.csv\n"}
+,{"stream_name":"stdout","time":119.100115064,"data":"Image dirs found: 30 BATCH folders\n"}
+,{"stream_name":"stdout","time":119.100162137,"data":"Base dirs: ['/kaggle/input/datasets/ramyharik/ff-2023-12-12-multi-modal-dataset-16']\n"}
+,{"stream_name":"stdout","time":119.100167794,"data":"ON_KAGGLE: True\n"}
+,{"stream_name":"stdout","time":119.100171097,"data":"Sensor features: 22\n"}
+,{"stream_name":"stdout","time":119.302230936,"data":"Loading CSV...\n"}
+,{"stream_name":"stdout","time":121.290102042,"data":"Raw shape: (166001, 51)\n"}
+,{"stream_name":"stdout","time":121.290144487,"data":"Columns: ['time', 'Q_VFD1_Temperature', 'Q_VFD2_Temperature', 'Q_VFD3_Temperature', 'Q_VFD4_Temperature', 'M_Conv1_Speed_mmps', 'M_Conv2_Speed_mmps', 'M_Conv3_Speed_mmps', 'M_Conv4_Speed_mmps', 'I_R01_Gripper_Pot', 'I_R01_Gripper_Load', 'I_R02_Gripper_Pot', 'I_R02_Gripper_Load', 'I_R03_Gripper_Pot', 'I_R03_Gripper_Load', 'I_R04_Gripper_Pot', 'I_R04_Gripper_Load', 'M_R01_SJointAngle_Degree', 'M_R01_LJointAngle_Degree', 'M_R01_UJointAngle_Degree', 'M_R01_RJointAngle_Degree', 'M_R01_BJointAngle_Degree', 'M_R01_TJointAngle_Degree', 'M_R02_SJointAngle_Degree', 'M_R02_LJointAngle_Degree', 'M_R02_UJointAngle_Degree', 'M_R02_RJointAngle_Degree', 'M_R02_BJointAngle_Degree', 'M_R02_TJointAngle_Degree', 'M_R03_SJointAngle_Degree', 'M_R03_LJointAngle_Degree', 'M_R03_UJointAngle_Degree', 'M_R03_RJointAngle_Degree', 'M_R03_BJointAngle_Degree', 'M_R03_TJointAngle_Degree', 'M_R04_SJointAngle_Degree', 'M_R04_LJointAngle_Degree', 'M_R04_UJointAngle_Degree', 'M_R04_RJointAngle_Degree', 'M_R04_BJointAngle_Degree', 'M_R04_TJointAngle_Degree', 'I_SafetyDoor1_Status', 'I_SafetyDoor2_Status', 'Q_Cell_CycleCount', 'I_MHS_GreenRocketTray', 'Cam1', 'Cam2', 'Description', 'CycleState', 'Cycle_Count_New', 'actual_state']\n"}
+,{"stream_name":"stdout","time":121.523222733,"data":"Cleaned shape: (165932, 53)\n"}
+,{"stream_name":"stdout","time":121.523258597,"data":"\n"}
+,{"stream_name":"stdout","time":121.52326553,"data":"Classes (5): ['NoBody1', 'NoNose', 'NoNose_NoBody2', 'NoNose_NoBody2_NoBody1', 'Normal']\n"}
+,{"stream_name":"stdout","time":121.523270677,"data":"\n"}
+,{"stream_name":"stdout","time":121.523275097,"data":"Label distribution:\n"}
+,{"stream_name":"stdout","time":121.523279413,"data":"label\n"}
+,{"stream_name":"stdout","time":121.52328788,"data":"Normal                    90775\n"}
+,{"stream_name":"stdout","time":121.523291034,"data":"NoNose_NoBody2_NoBody1    26628\n"}
+,{"stream_name":"stdout","time":121.523306042,"data":"NoNose_NoBody2            25206\n"}
+,{"stream_name":"stdout","time":121.523308579,"data":"NoNose                    19307\n"}
+,{"stream_name":"stdout","time":121.523310752,"data":"NoBody1                    4016\n"}
+,{"stream_name":"stdout","time":121.523313087,"data":"Name: count, dtype: int64\n"}
+,{"stream_name":"stdout","time":122.73899548,"data":"Train: 132950 samples (228 cycles)\n"}
+,{"stream_name":"stdout","time":122.739044826,"data":"Test:  32982 samples (57 cycles)\n"}
+,{"stream_name":"stdout","time":122.739050918,"data":"\n"}
+,{"stream_name":"stdout","time":122.739054888,"data":"Train labels:\n"}
+,{"stream_name":"stdout","time":122.739059035,"data":"label\n"}
+,{"stream_name":"stdout","time":122.739063173,"data":"Normal                    73230\n"}
+,{"stream_name":"stdout","time":122.739067151,"data":"NoNose_NoBody2_NoBody1    22146\n"}
+,{"stream_name":"stdout","time":122.739070766,"data":"NoNose_NoBody2            20262\n"}
+,{"stream_name":"stdout","time":122.739074365,"data":"NoNose                    13987\n"}
+,{"stream_name":"stdout","time":122.739077955,"data":"NoBody1                    3325\n"}
+,{"stream_name":"stdout","time":122.739081657,"data":"Name: count, dtype: int64\n"}
+,{"stream_name":"stdout","time":122.739085681,"data":"\n"}
+,{"stream_name":"stdout","time":122.739089158,"data":"Test labels:\n"}
+,{"stream_name":"stdout","time":122.739095577,"data":"label\n"}
+,{"stream_name":"stdout","time":122.73909809,"data":"Normal                    17545\n"}
+,{"stream_name":"stdout","time":122.73910044,"data":"NoNose                     5320\n"}
+,{"stream_name":"stdout","time":122.739102817,"data":"NoNose_NoBody2             4944\n"}
+,{"stream_name":"stdout","time":122.739105174,"data":"NoNose_NoBody2_NoBody1     4482\n"}
+,{"stream_name":"stdout","time":122.739107489,"data":"NoBody1                     691\n"}
+,{"stream_name":"stdout","time":122.739109856,"data":"Name: count, dtype: int64\n"}
+,{"stream_name":"stdout","time":122.938326206,"data":"Creating sequences...\n"}
+,{"stream_name":"stdout","time":123.409666862,"data":"Train: (121550, 50, 22)  Test: (30132, 50, 22)\n"}
+,{"stream_name":"stdout","time":123.409699061,"data":"\n"}
+,{"stream_name":"stdout","time":123.409705342,"data":"Class weights: [3.4095005989074707, 0.6262698173522949, 0.43077296018600464, 0.3941263258457184, 0.1393299102783203]\n"}
+,{"stream_name":"stdout","time":138.44926298,"data":"BATCH folders found: 30\n"}
+,{"stream_name":"stdout","time":138.449305457,"data":"Base directories: ['/kaggle/input/datasets/ramyharik/ff-2023-12-12-multi-modal-dataset-16']\n"}
+,{"stream_name":"stdout","time":138.449313606,"data":"\n"}
+,{"stream_name":"stdout","time":138.449319098,"data":"Image-eligible rows (state 4,9): 53881\n"}
+,{"stream_name":"stdout","time":138.449324373,"data":"Sample test: 10/10 images matched\n"}
+,{"stream_name":"stdout","time":138.4493293,"data":"Resolving all image paths...\n"}
+,{"stream_name":"stdout","time":139.883193587,"data":"Total found: 9542 / 53881\n"}
+,{"stream_name":"stdout","time":139.883227164,"data":"Image dataset ready: 9542 samples\n"}
+,{"stream_name":"stdout","time":139.883234092,"data":"\n"}
+,{"stream_name":"stdout","time":139.883238885,"data":"HAS_IMAGES = True\n"}
+,{"stream_name":"stdout","time":139.919304918,"data":"Dataset classes defined.\n"}
+,{"stream_name":"stdout","time":139.960148522,"data":"Models defined.\n"}
+,{"stream_name":"stdout","time":139.999500479,"data":"Training functions ready.\n"}
+,{"stream_name":"stdout","time":140.582139431,"data":"\n"}
+,{"stream_name":"stdout","time":140.58219844,"data":"============================================================\n"}
+,{"stream_name":"stdout","time":140.582203614,"data":" sensor_bilstm | Trainable params: 567,685\n"}
+,{"stream_name":"stdout","time":140.582206428,"data":"============================================================\n"}
+,{"stream_name":"stdout","time":159.92335347,"data":"Epoch  1/20 | Train Loss: 0.3396 Acc: 0.8768 | Val Loss: 0.3843 F1: 0.9043 | 19.3s\n"}
+,{"stream_name":"stdout","time":178.343430455,"data":"Epoch  2/20 | Train Loss: 0.1948 Acc: 0.9331 | Val Loss: 0.3522 F1: 0.9081 | 18.4s\n"}
+,{"stream_name":"stdout","time":196.590577816,"data":"Epoch  3/20 | Train Loss: 0.1575 Acc: 0.9472 | Val Loss: 0.3732 F1: 0.9079 | 18.3s\n"}
+,{"stream_name":"stdout","time":214.914657201,"data":"Epoch  4/20 | Train Loss: 0.1339 Acc: 0.9554 | Val Loss: 0.3659 F1: 0.9045 | 18.3s\n"}
+,{"stream_name":"stdout","time":233.181418375,"data":"Epoch  5/20 | Train Loss: 0.1148 Acc: 0.9627 | Val Loss: 0.3308 F1: 0.9108 | 18.3s\n"}
+,{"stream_name":"stdout","time":251.606379109,"data":"Epoch  6/20 | Train Loss: 0.0977 Acc: 0.9690 | Val Loss: 0.4298 F1: 0.9053 | 18.4s\n"}
+,{"stream_name":"stdout","time":269.776736509,"data":"Epoch  7/20 | Train Loss: 0.0811 Acc: 0.9748 | Val Loss: 0.4862 F1: 0.8967 | 18.2s\n"}
+,{"stream_name":"stdout","time":288.181645399,"data":"Epoch  8/20 | Train Loss: 0.0716 Acc: 0.9801 | Val Loss: 0.5760 F1: 0.9025 | 18.4s\n"}
+,{"stream_name":"stdout","time":306.782327409,"data":"Epoch  9/20 | Train Loss: 0.0652 Acc: 0.9824 | Val Loss: 0.5823 F1: 0.8939 | 18.6s\n"}
+,{"stream_name":"stdout","time":325.461767847,"data":"Epoch 10/20 | Train Loss: 0.0596 Acc: 0.9850 | Val Loss: 0.4942 F1: 0.9123 | 18.7s\n"}
+,{"stream_name":"stdout","time":343.976735259,"data":"Epoch 11/20 | Train Loss: 0.0577 Acc: 0.9857 | Val Loss: 0.5744 F1: 0.9025 | 18.5s\n"}
+,{"stream_name":"stdout","time":362.346366732,"data":"Epoch 12/20 | Train Loss: 0.0288 Acc: 0.9933 | Val Loss: 0.5639 F1: 0.9121 | 18.4s\n"}
+,{"stream_name":"stdout","time":380.7654673,"data":"Epoch 13/20 | Train Loss: 0.0283 Acc: 0.9935 | Val Loss: 0.5499 F1: 0.9121 | 18.4s\n"}
+,{"stream_name":"stdout","time":399.092972982,"data":"Epoch 14/20 | Train Loss: 0.0314 Acc: 0.9934 | Val Loss: 0.6915 F1: 0.9000 | 18.3s\n"}
+,{"stream_name":"stdout","time":417.537153652,"data":"Epoch 15/20 | Train Loss: 0.0329 Acc: 0.9931 | Val Loss: 0.6024 F1: 0.9131 | 18.5s\n"}
+,{"stream_name":"stdout","time":435.796665933,"data":"Epoch 16/20 | Train Loss: 0.0308 Acc: 0.9932 | Val Loss: 0.6069 F1: 0.9125 | 18.2s\n"}
+,{"stream_name":"stdout","time":454.161136189,"data":"Epoch 17/20 | Train Loss: 0.0332 Acc: 0.9930 | Val Loss: 0.5157 F1: 0.9163 | 18.4s\n"}
+,{"stream_name":"stdout","time":472.530361383,"data":"Epoch 18/20 | Train Loss: 0.0155 Acc: 0.9964 | Val Loss: 0.5606 F1: 0.9215 | 18.4s\n"}
+,{"stream_name":"stdout","time":490.767329541,"data":"Epoch 19/20 | Train Loss: 0.0164 Acc: 0.9964 | Val Loss: 0.7265 F1: 0.9110 | 18.2s\n"}
+,{"stream_name":"stdout","time":509.041778454,"data":"Epoch 20/20 | Train Loss: 0.0187 Acc: 0.9963 | Val Loss: 0.5891 F1: 0.9188 | 18.3s\n"}
+,{"stream_name":"stdout","time":510.665311607,"data":"\n"}
+,{"stream_name":"stdout","time":510.665349558,"data":"--- sensor_bilstm Final Results ---\n"}
+,{"stream_name":"stdout","time":510.665355902,"data":"Accuracy:  0.9224\n"}
+,{"stream_name":"stdout","time":510.665361395,"data":"Precision: 0.9225\n"}
+,{"stream_name":"stdout","time":510.665365936,"data":"Recall:    0.9224\n"}
+,{"stream_name":"stdout","time":510.665370412,"data":"F1-Score:  0.9215\n"}
+,{"stream_name":"stdout","time":510.66537468,"data":"                        precision    recall  f1-score   support\n"}
+,{"stream_name":"stdout","time":510.665400096,"data":"\n"}
+,{"stream_name":"stdout","time":510.665402654,"data":"               NoBody1       0.88      0.96      0.92       529\n"}
+,{"stream_name":"stdout","time":510.665404991,"data":"                NoNose       0.91      0.96      0.94      5320\n"}
+,{"stream_name":"stdout","time":510.665407158,"data":"        NoNose_NoBody2       0.88      0.95      0.91      4944\n"}
+,{"stream_name":"stdout","time":510.665409302,"data":"NoNose_NoBody2_NoBody1       0.87      0.76      0.81      4482\n"}
+,{"stream_name":"stdout","time":510.665411532,"data":"                Normal       0.96      0.95      0.95     14857\n"}
+,{"stream_name":"stdout","time":510.665413796,"data":"\n"}
+,{"stream_name":"stdout","time":510.665416368,"data":"              accuracy                           0.92     30132\n"}
+,{"stream_name":"stdout","time":510.665418561,"data":"             macro avg       0.90      0.92      0.91     30132\n"}
+,{"stream_name":"stdout","time":510.665420711,"data":"          weighted avg       0.92      0.92      0.92     30132\n"}
+,{"stream_name":"stdout","time":510.665422951,"data":"\n"}
+,{"stream_name":"stdout","time":510.856275297,"data":"이미지 클래스 분포: {np.int64(4): 1141, np.int64(1): 4245, np.int64(2): 1810}\n"}
+,{"stream_name":"stdout","time":510.856311819,"data":"이미지 전용 class weights: [2.4979212284088135, 0.0005884384736418724, 0.0013800669694319367, 2.4979212284088135, 0.002189238555729389]\n"}
+,{"stream_name":"stdout","time":510.911404544,"data":"Downloading: \"https://download.pytorch.org/models/resnet18-f37072fd.pth\" to /root/.cache/torch/hub/checkpoints/resnet18-f37072fd.pth\n"}
+,{"stream_name":"stderr","time":511.03167296,"data":"\r  0%|          | 0.00/44.7M [00:00\u003c?, ?B/s]\n"}
+,{"stream_name":"stderr","time":511.134148274,"data":"\r  0%|          | 0.00/44.7M [00:00\u003c?, ?B/s]\r 17%|█▋        | 7.62M/44.7M [00:00\u003c00:00, 79.4MB/s]\n"}
+,{"stream_name":"stderr","time":511.234143647,"data":"\r 17%|█▋        | 7.62M/44.7M [00:00\u003c00:00, 79.4MB/s]\r 57%|█████▋    | 25.6M/44.7M [00:00\u003c00:00, 144MB/s] \n"}
+,{"stream_name":"stderr","time":511.334212258,"data":"\r 57%|█████▋    | 25.6M/44.7M [00:00\u003c00:00, 144MB/s] \r 97%|█████████▋| 43.5M/44.7M [00:00\u003c00:00, 163MB/s]\n"}
+,{"stream_name":"stderr","time":511.33997679,"data":"\r 97%|█████████▋| 43.5M/44.7M [00:00\u003c00:00, 163MB/s]\r100%|██████████| 44.7M/44.7M [00:00\u003c00:00, 152MB/s]\n"}
+,{"stream_name":"stdout","time":511.403958122,"data":"\n"}
+,{"stream_name":"stdout","time":511.403986239,"data":"============================================================\n"}
+,{"stream_name":"stdout","time":511.403991127,"data":" image_resnet18 | Trainable params: 11,242,821\n"}
+,{"stream_name":"stdout","time":511.403994891,"data":"============================================================\n"}
+,{"stream_name":"stderr","time":511.404776122,"data":"\r100%|██████████| 44.7M/44.7M [00:00\u003c00:00, 152MB/s]\n"}
+,{"stream_name":"stderr","time":511.404796094,"data":"\n"}
+,{"stream_name":"stderr","time":511.404800101,"data":"\n"}
+,{"stream_name":"stdout","time":697.818430396,"data":"Epoch  1/20 | Train Loss: 1.1403 Acc: 0.3250 | Val Loss: 1.1059 F1: 0.0305 | 186.3s\n"}
+,{"stream_name":"stdout","time":827.734061367,"data":"Epoch  2/20 | Train Loss: 1.1030 Acc: 0.3521 | Val Loss: 1.0568 F1: 0.6112 | 129.8s\n"}
+,{"stream_name":"stdout","time":958.694645489,"data":"Epoch  3/20 | Train Loss: 1.1042 Acc: 0.3181 | Val Loss: 1.1170 F1: 0.0355 | 131.0s\n"}
+,{"stream_name":"stdout","time":1088.668787505,"data":"Epoch  4/20 | Train Loss: 1.1044 Acc: 0.3227 | Val Loss: 1.0808 F1: 0.0355 | 130.0s\n"}
+,{"stream_name":"stdout","time":1217.201194584,"data":"Epoch  5/20 | Train Loss: 1.1032 Acc: 0.3631 | Val Loss: 1.1395 F1: 0.0355 | 128.5s\n"}
+,{"stream_name":"stdout","time":1345.726464935,"data":"Epoch  6/20 | Train Loss: 1.1016 Acc: 0.3364 | Val Loss: 1.1090 F1: 0.0305 | 128.5s\n"}
+,{"stream_name":"stdout","time":1475.497662968,"data":"Epoch  7/20 | Train Loss: 1.1007 Acc: 0.3124 | Val Loss: 1.0938 F1: 0.0355 | 129.8s\n"}
+,{"stream_name":"stdout","time":1604.667942058,"data":"Epoch  8/20 | Train Loss: 1.1014 Acc: 0.3930 | Val Loss: 1.0543 F1: 0.6112 | 129.2s\n"}
+,{"stream_name":"stdout","time":1736.77136381,"data":"Epoch  9/20 | Train Loss: 1.1020 Acc: 0.3715 | Val Loss: 1.0923 F1: 0.0305 | 132.1s\n"}
+,{"stream_name":"stdout","time":1865.948541423,"data":"Epoch 10/20 | Train Loss: 1.1001 Acc: 0.3388 | Val Loss: 1.0870 F1: 0.6112 | 129.2s\n"}
+,{"stream_name":"stdout","time":1994.357199331,"data":"Epoch 11/20 | Train Loss: 1.1006 Acc: 0.3645 | Val Loss: 1.1170 F1: 0.0355 | 128.4s\n"}
+,{"stream_name":"stdout","time":2122.503069475,"data":"Epoch 12/20 | Train Loss: 1.1011 Acc: 0.3495 | Val Loss: 1.0723 F1: 0.6112 | 128.1s\n"}
+,{"stream_name":"stdout","time":2122.503103849,"data":"Early stopping at epoch 12\n"}
+,{"stream_name":"stdout","time":2152.310460433,"data":"\n"}
+,{"stream_name":"stdout","time":2152.310498075,"data":"--- image_resnet18 Final Results ---\n"}
+,{"stream_name":"stdout","time":2152.310505068,"data":"Accuracy:  0.7263\n"}
+,{"stream_name":"stdout","time":2152.310510774,"data":"Precision: 0.5276\n"}
+,{"stream_name":"stdout","time":2152.310515421,"data":"Recall:    0.7263\n"}
+,{"stream_name":"stdout","time":2152.310520394,"data":"F1-Score:  0.6112\n"}
+,{"stream_name":"stdout","time":2152.310525562,"data":"                        precision    recall  f1-score   support\n"}
+,{"stream_name":"stdout","time":2152.310530539,"data":"\n"}
+,{"stream_name":"stdout","time":2152.310535589,"data":"               NoBody1       0.00      0.00      0.00         0\n"}
+,{"stream_name":"stdout","time":2152.310540424,"data":"                NoNose       0.73      1.00      0.84      1704\n"}
+,{"stream_name":"stdout","time":2152.310545245,"data":"        NoNose_NoBody2       0.00      0.00      0.00       334\n"}
+,{"stream_name":"stdout","time":2152.310550126,"data":"NoNose_NoBody2_NoBody1       0.00      0.00      0.00         0\n"}
+,{"stream_name":"stdout","time":2152.310554875,"data":"                Normal       0.00      0.00      0.00       308\n"}
+,{"stream_name":"stdout","time":2152.310559911,"data":"\n"}
+,{"stream_name":"stdout","time":2152.310564951,"data":"              accuracy                           0.73      2346\n"}
+,{"stream_name":"stdout","time":2152.31056945,"data":"             macro avg       0.15      0.20      0.17      2346\n"}
+,{"stream_name":"stdout","time":2152.31057406,"data":"          weighted avg       0.53      0.73      0.61      2346\n"}
+,{"stream_name":"stdout","time":2152.310579193,"data":"\n"}
+,{"stream_name":"stdout","time":2152.545836936,"data":"Creating multimodal dataset...\n"}
+,{"stream_name":"stdout","time":2153.258520931,"data":"Train: (39624, 50, 22), images: 6733\n"}
+,{"stream_name":"stdout","time":2153.258556308,"data":"Test:  (9521, 50, 22), images: 2161\n"}
+,{"stream_name":"stdout","time":2153.258561045,"data":"Fusion class dist: {4: 20342, 1: 4579, 2: 6871, 0: 328, 3: 7504}\n"}
+,{"stream_name":"stdout","time":2153.25856491,"data":"Fusion class weights: [4.240153789520264, 0.3037279546260834, 0.20241163671016693, 0.18533720076084137, 0.06836940348148346]\n"}
+,{"stream_name":"stdout","time":2153.267025708,"data":"\n"}
+,{"stream_name":"stdout","time":2153.267060438,"data":"============================================================\n"}
+,{"stream_name":"stdout","time":2153.267065872,"data":" fusion_dlf | Trainable params: 198,149\n"}
+,{"stream_name":"stdout","time":2153.26706946,"data":"============================================================\n"}
+,{"stream_name":"stdout","time":2303.485343345,"data":"Epoch  1/20 | Train Loss: 0.0687 Acc: 0.9876 | Val Loss: 0.9772 F1: 0.8678 | 150.1s\n"}
+,{"stream_name":"stdout","time":2454.795097542,"data":"Epoch  2/20 | Train Loss: 0.0339 Acc: 0.9921 | Val Loss: 1.0306 F1: 0.8649 | 151.3s\n"}
+,{"stream_name":"stdout","time":2605.639973784,"data":"Epoch  3/20 | Train Loss: 0.0338 Acc: 0.9933 | Val Loss: 1.0911 F1: 0.8648 | 150.9s\n"}
+,{"stream_name":"stdout","time":2756.2987316,"data":"Epoch  4/20 | Train Loss: 0.0333 Acc: 0.9928 | Val Loss: 1.1797 F1: 0.8655 | 150.7s\n"}
+,{"stream_name":"stdout","time":2906.05292365,"data":"Epoch  5/20 | Train Loss: 0.0285 Acc: 0.9933 | Val Loss: 1.0415 F1: 0.8638 | 149.7s\n"}
+,{"stream_name":"stdout","time":3055.80414393,"data":"Epoch  6/20 | Train Loss: 0.0321 Acc: 0.9927 | Val Loss: 1.0813 F1: 0.8687 | 149.6s\n"}
+,{"stream_name":"stdout","time":3205.951676059,"data":"Epoch  7/20 | Train Loss: 0.0315 Acc: 0.9934 | Val Loss: 1.1435 F1: 0.8665 | 150.1s\n"}
+,{"stream_name":"stdout","time":3356.115320595,"data":"Epoch  8/20 | Train Loss: 0.0225 Acc: 0.9946 | Val Loss: 1.1162 F1: 0.8668 | 150.2s\n"}
+,{"stream_name":"stdout","time":3506.124479722,"data":"Epoch  9/20 | Train Loss: 0.0232 Acc: 0.9945 | Val Loss: 0.9829 F1: 0.8665 | 150.0s\n"}
+,{"stream_name":"stdout","time":3656.300708827,"data":"Epoch 10/20 | Train Loss: 0.0228 Acc: 0.9940 | Val Loss: 0.9883 F1: 0.8654 | 150.2s\n"}
+,{"stream_name":"stdout","time":3805.354344332,"data":"Epoch 11/20 | Train Loss: 0.0250 Acc: 0.9943 | Val Loss: 0.9396 F1: 0.8646 | 149.1s\n"}
+,{"stream_name":"stdout","time":3955.68294739,"data":"Epoch 12/20 | Train Loss: 0.0196 Acc: 0.9949 | Val Loss: 0.9709 F1: 0.8660 | 150.3s\n"}
+,{"stream_name":"stdout","time":4105.598705174,"data":"Epoch 13/20 | Train Loss: 0.0234 Acc: 0.9943 | Val Loss: 0.9663 F1: 0.8657 | 149.9s\n"}
+,{"stream_name":"stdout","time":4254.590996389,"data":"Epoch 14/20 | Train Loss: 0.0235 Acc: 0.9944 | Val Loss: 1.0145 F1: 0.8686 | 149.0s\n"}
+,{"stream_name":"stdout","time":4404.464771609,"data":"Epoch 15/20 | Train Loss: 0.0247 Acc: 0.9943 | Val Loss: 1.0189 F1: 0.8667 | 149.9s\n"}
+,{"stream_name":"stdout","time":4553.384716784,"data":"Epoch 16/20 | Train Loss: 0.0219 Acc: 0.9949 | Val Loss: 1.0534 F1: 0.8678 | 148.9s\n"}
+,{"stream_name":"stdout","time":4553.384769318,"data":"Early stopping at epoch 16\n"}
+,{"stream_name":"stdout","time":4589.856565546,"data":"\n"}
+,{"stream_name":"stdout","time":4589.856606195,"data":"--- fusion_dlf Final Results ---\n"}
+,{"stream_name":"stdout","time":4589.856613394,"data":"Accuracy:  0.8732\n"}
+,{"stream_name":"stdout","time":4589.85661898,"data":"Precision: 0.8673\n"}
+,{"stream_name":"stdout","time":4589.856624332,"data":"Recall:    0.8732\n"}
+,{"stream_name":"stdout","time":4589.856630195,"data":"F1-Score:  0.8687\n"}
+,{"stream_name":"stdout","time":4589.856652825,"data":"                        precision    recall  f1-score   support\n"}
+,{"stream_name":"stdout","time":4589.856659319,"data":"\n"}
+,{"stream_name":"stdout","time":4589.856664634,"data":"               NoBody1       0.76      0.61      0.68        57\n"}
+,{"stream_name":"stdout","time":4589.856671074,"data":"                NoNose       0.97      0.98      0.97      1704\n"}
+,{"stream_name":"stdout","time":4589.856677193,"data":"        NoNose_NoBody2       0.82      0.91      0.86      1670\n"}
+,{"stream_name":"stdout","time":4589.856682654,"data":"NoNose_NoBody2_NoBody1       0.66      0.53      0.59      1480\n"}
+,{"stream_name":"stdout","time":4589.856703663,"data":"                Normal       0.92      0.93      0.92      4610\n"}
+,{"stream_name":"stdout","time":4589.856708137,"data":"\n"}
+,{"stream_name":"stdout","time":4589.856712345,"data":"              accuracy                           0.87      9521\n"}
+,{"stream_name":"stdout","time":4589.856716737,"data":"             macro avg       0.82      0.79      0.81      9521\n"}
+,{"stream_name":"stdout","time":4589.856720765,"data":"          weighted avg       0.87      0.87      0.87      9521\n"}
+,{"stream_name":"stdout","time":4589.856724582,"data":"\n"}
+,{"stream_name":"stdout","time":4589.871565685,"data":"\n"}
+,{"stream_name":"stdout","time":4589.871587188,"data":"============================================================\n"}
+,{"stream_name":"stdout","time":4589.871591826,"data":" fusion_crossattn | Trainable params: 593,413\n"}
+,{"stream_name":"stdout","time":4589.871596049,"data":"============================================================\n"}
+,{"stream_name":"stdout","time":4741.594050129,"data":"Epoch  1/20 | Train Loss: 0.0516 Acc: 0.9918 | Val Loss: 0.9980 F1: 0.8645 | 151.6s\n"}
+,{"stream_name":"stdout","time":4892.912292762,"data":"Epoch  2/20 | Train Loss: 0.0235 Acc: 0.9945 | Val Loss: 1.0243 F1: 0.8661 | 151.2s\n"}
+,{"stream_name":"stdout","time":5044.027659028,"data":"Epoch  3/20 | Train Loss: 0.0277 Acc: 0.9949 | Val Loss: 1.0241 F1: 0.8622 | 151.1s\n"}
+,{"stream_name":"stdout","time":5195.828145851,"data":"Epoch  4/20 | Train Loss: 0.0224 Acc: 0.9946 | Val Loss: 1.0377 F1: 0.8679 | 151.7s\n"}
+,{"stream_name":"stdout","time":5347.117884745,"data":"Epoch  5/20 | Train Loss: 0.0236 Acc: 0.9950 | Val Loss: 0.9434 F1: 0.8620 | 151.3s\n"}
+,{"stream_name":"stdout","time":5497.309007023,"data":"Epoch  6/20 | Train Loss: 0.0231 Acc: 0.9947 | Val Loss: 1.0545 F1: 0.8689 | 150.1s\n"}
+,{"stream_name":"stdout","time":5648.012308631,"data":"Epoch  7/20 | Train Loss: 0.0240 Acc: 0.9948 | Val Loss: 0.9957 F1: 0.8684 | 150.7s\n"}
+,{"stream_name":"stdout","time":5797.673940197,"data":"Epoch  8/20 | Train Loss: 0.0237 Acc: 0.9943 | Val Loss: 1.0698 F1: 0.8651 | 149.7s\n"}
+,{"stream_name":"stdout","time":5948.648654129,"data":"Epoch  9/20 | Train Loss: 0.0245 Acc: 0.9949 | Val Loss: 1.1093 F1: 0.8666 | 151.0s\n"}
+,{"stream_name":"stdout","time":6099.231291055,"data":"Epoch 10/20 | Train Loss: 0.0243 Acc: 0.9947 | Val Loss: 1.0996 F1: 0.8656 | 150.6s\n"}
+,{"stream_name":"stdout","time":6249.945618604,"data":"Epoch 11/20 | Train Loss: 0.0248 Acc: 0.9948 | Val Loss: 1.0292 F1: 0.8668 | 150.7s\n"}
+,{"stream_name":"stdout","time":6401.703366369,"data":"Epoch 12/20 | Train Loss: 0.0182 Acc: 0.9955 | Val Loss: 0.9532 F1: 0.8624 | 151.7s\n"}
+,{"stream_name":"stdout","time":6552.882358985,"data":"Epoch 13/20 | Train Loss: 0.0197 Acc: 0.9951 | Val Loss: 0.9870 F1: 0.8644 | 151.2s\n"}
+,{"stream_name":"stdout","time":6703.468387739,"data":"Epoch 14/20 | Train Loss: 0.0184 Acc: 0.9953 | Val Loss: 1.0165 F1: 0.8666 | 150.6s\n"}
+,{"stream_name":"stdout","time":6853.981197247,"data":"Epoch 15/20 | Train Loss: 0.0239 Acc: 0.9956 | Val Loss: 0.9406 F1: 0.8671 | 150.5s\n"}
+,{"stream_name":"stdout","time":7005.648311185,"data":"Epoch 16/20 | Train Loss: 0.0190 Acc: 0.9959 | Val Loss: 0.9937 F1: 0.8672 | 151.6s\n"}
+,{"stream_name":"stdout","time":7005.648347619,"data":"Early stopping at epoch 16\n"}
+,{"stream_name":"stdout","time":7042.498622589,"data":"\n"}
+,{"stream_name":"stdout","time":7042.498677624,"data":"--- fusion_crossattn Final Results ---\n"}
+,{"stream_name":"stdout","time":7042.498683505,"data":"Accuracy:  0.8735\n"}
+,{"stream_name":"stdout","time":7042.498686947,"data":"Precision: 0.8678\n"}
+,{"stream_name":"stdout","time":7042.498702745,"data":"Recall:    0.8735\n"}
+,{"stream_name":"stdout","time":7042.498705466,"data":"F1-Score:  0.8689\n"}
+,{"stream_name":"stdout","time":7042.498707828,"data":"                        precision    recall  f1-score   support\n"}
+,{"stream_name":"stdout","time":7042.498710253,"data":"\n"}
+,{"stream_name":"stdout","time":7042.498712608,"data":"               NoBody1       0.76      0.61      0.68        57\n"}
+,{"stream_name":"stdout","time":7042.498715007,"data":"                NoNose       0.96      0.97      0.97      1704\n"}
+,{"stream_name":"stdout","time":7042.498717365,"data":"        NoNose_NoBody2       0.81      0.92      0.86      1670\n"}
+,{"stream_name":"stdout","time":7042.498719726,"data":"NoNose_NoBody2_NoBody1       0.67      0.53      0.59      1480\n"}
+,{"stream_name":"stdout","time":7042.498722057,"data":"                Normal       0.92      0.93      0.93      4610\n"}
+,{"stream_name":"stdout","time":7042.498724464,"data":"\n"}
+,{"stream_name":"stdout","time":7042.498726657,"data":"              accuracy                           0.87      9521\n"}
+,{"stream_name":"stdout","time":7042.498728944,"data":"             macro avg       0.82      0.79      0.81      9521\n"}
+,{"stream_name":"stdout","time":7042.498731274,"data":"          weighted avg       0.87      0.87      0.87      9521\n"}
+,{"stream_name":"stdout","time":7042.498733676,"data":"\n"}
+,{"stream_name":"stdout","time":7079.164426711,"data":"\n"}
+,{"stream_name":"stdout","time":7079.164458464,"data":"========================================================================\n"}
+,{"stream_name":"stdout","time":7079.164465014,"data":" FAIR COMPARISON  (all models on the SAME cycle 4·9 test set)\n"}
+,{"stream_name":"stdout","time":7079.164477249,"data":"========================================================================\n"}
+,{"stream_name":"stdout","time":7079.164480934,"data":"Model                           Accuracy Precision    Recall        F1\n"}
+,{"stream_name":"stdout","time":7079.164484366,"data":"------------------------------------------------------------------------\n"}
+,{"stream_name":"stdout","time":7079.164488209,"data":"Sensor@cyc4_9                     0.8763    0.8707    0.8763    0.8710\n"}
+,{"stream_name":"stdout","time":7079.164491397,"data":"Image@cyc4_9                      0.1790    0.0320    0.1790    0.0543\n"}
+,{"stream_name":"stdout","time":7079.164494593,"data":"Fusion-Concat                     0.8732    0.8673    0.8732    0.8687\n"}
+,{"stream_name":"stdout","time":7079.164497857,"data":"Fusion-CrossAttn                  0.8735    0.8678    0.8735    0.8689\n"}
+,{"stream_name":"stdout","time":7079.164501235,"data":"========================================================================\n"}
+,{"stream_name":"stdout","time":7079.164504455,"data":"\n"}
+,{"stream_name":"stdout","time":7079.164507523,"data":"[GOAL] 센서@cyc4_9 F1=0.8710 | best Fusion F1=0.8689 | not yet\n"}
+,{"stream_name":"stdout","time":7240.28513937,"data":"\n"}
+,{"stream_name":"stdout","time":7240.285186792,"data":"========================================================================\n"}
+,{"stream_name":"stdout","time":7240.285191963,"data":" DECISION-LEVEL FUSION (late) | best image weight w=0.90 (tuned on train)\n"}
+,{"stream_name":"stdout","time":7240.285196674,"data":"========================================================================\n"}
+,{"stream_name":"stdout","time":7240.285229249,"data":"Sensor@cyc4_9      F1 : 0.8710\n"}
+,{"stream_name":"stdout","time":7240.285234525,"data":"Fusion-Concat      F1 : 0.8687\n"}
+,{"stream_name":"stdout","time":7240.285239555,"data":"Decision-Fusion    F1 : 0.8715   (img-present 2161/9521)\n"}
+,{"stream_name":"stdout","time":7240.285262322,"data":"========================================================================\n"}
+,{"stream_name":"stdout","time":7240.285265935,"data":"[GOAL-DLF] *** ACHIEVED: Decision-Fusion \u003e Sensor ***\n"}
+,{"stream_name":"stdout","time":7240.28527137,"data":"========================================================================\n"}
+,{"stream_name":"stdout","time":7242.114942618,"data":"\n"}
+,{"stream_name":"stdout","time":7242.114969756,"data":"======================================================================\n"}
+,{"stream_name":"stdout","time":7242.114974195,"data":" FINAL RESULTS SUMMARY\n"}
+,{"stream_name":"stdout","time":7242.114977698,"data":"======================================================================\n"}
+,{"stream_name":"stdout","time":7242.114981311,"data":"Model                       Accuracy  Precision     Recall         F1\n"}
+,{"stream_name":"stdout","time":7242.114984695,"data":"----------------------------------------------------------------------\n"}
+,{"stream_name":"stdout","time":7242.114988105,"data":"Sensor (BiLSTM)               0.9224     0.9225     0.9224     0.9215\n"}
+,{"stream_name":"stdout","time":7242.11499154,"data":"Image (ResNet18)              0.7263     0.5276     0.7263     0.6112\n"}
+,{"stream_name":"stdout","time":7242.115000242,"data":"Fusion-Concat                 0.8732     0.8673     0.8732     0.8687\n"}
+,{"stream_name":"stdout","time":7242.115003478,"data":"Fusion-CrossAttn              0.8735     0.8678     0.8735     0.8689\n"}
+,{"stream_name":"stdout","time":7242.115022195,"data":"======================================================================\n"}
+,{"stream_name":"stdout","time":7242.115026056,"data":"\n"}
+,{"stream_name":"stdout","time":7242.115030143,"data":"Done!\n"}
+,{"stream_name":"stderr","time":7247.392717439,"data":"/usr/local/lib/python3.12/dist-packages/mistune.py:435: SyntaxWarning: invalid escape sequence '\\|'\n"}
+,{"stream_name":"stderr","time":7247.392746934,"data":"  cells[i][c] = re.sub('\\\\\\\\\\|', '|', cell)\n"}
+,{"stream_name":"stderr","time":7247.568821006,"data":"/usr/local/lib/python3.12/dist-packages/nbconvert/filters/filter_links.py:36: SyntaxWarning: invalid escape sequence '\\_'\n"}
+,{"stream_name":"stderr","time":7247.568852689,"data":"  text = re.sub(r'_', '\\_', text) # Escape underscores in display text\n"}
+,{"stream_name":"stderr","time":7248.225441043,"data":"[NbConvertApp] Converting notebook __notebook__.ipynb to notebook\n"}
+,{"stream_name":"stderr","time":7248.574005013,"data":"[NbConvertApp] Writing 469251 bytes to __notebook__.ipynb\n"}
+,{"stream_name":"stderr","time":7251.000814778,"data":"[NbConvertApp] Converting notebook __notebook__.ipynb to html\n"}
+,{"stream_name":"stderr","time":7252.03202255,"data":"[NbConvertApp] Support files will be in __results___files/\n"}
+,{"stream_name":"stderr","time":7252.032058532,"data":"[NbConvertApp] Making directory __results___files\n"}
+,{"stream_name":"stderr","time":7252.032378512,"data":"[NbConvertApp] Making directory __results___files\n"}
+,{"stream_name":"stderr","time":7252.03259088,"data":"[NbConvertApp] Making directory __results___files\n"}
+,{"stream_name":"stderr","time":7252.032888242,"data":"[NbConvertApp] Making directory __results___files\n"}
+,{"stream_name":"stderr","time":7252.033202385,"data":"[NbConvertApp] Writing 497900 bytes to __results__.html\n"}
+]

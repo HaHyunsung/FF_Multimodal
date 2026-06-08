@@ -1,0 +1,68 @@
+class SensorSequenceDataset(Dataset):
+    def __init__(self, sequences, labels):
+        self.X = torch.FloatTensor(sequences)
+        self.y = torch.LongTensor(labels)
+    def __len__(self):
+        return len(self.y)
+    def __getitem__(self, idx):
+        return self.X[idx], self.y[idx]
+
+
+class ImageAnomalyDataset(Dataset):
+    def __init__(self, image_paths, labels, transform=None):
+        self.image_paths = image_paths
+        self.labels = torch.LongTensor(labels)
+        self.transform = transform
+    def __len__(self):
+        return len(self.labels)
+    def __getitem__(self, idx):
+        try:
+            image = Image.open(self.image_paths[idx]).convert("RGB")
+            if self.transform:
+                image = self.transform(image)
+        except Exception:
+            image = torch.zeros(3, IMAGE_SIZE, IMAGE_SIZE)
+        return image, self.labels[idx]
+
+
+class MultimodalDataset(Dataset):
+    def __init__(self, sequences, image_paths, labels, transform=None):
+        self.X_seq = torch.FloatTensor(sequences)
+        self.image_paths = image_paths
+        self.labels = torch.LongTensor(labels)
+        self.transform = transform
+    def __len__(self):
+        return len(self.labels)
+    def __getitem__(self, idx):
+        seq = self.X_seq[idx]
+        path = self.image_paths[idx]
+        has_image = False
+        if path and os.path.exists(str(path)):
+            try:
+                image = Image.open(path).convert("RGB")
+                if self.transform:
+                    image = self.transform(image)
+                has_image = True
+            except Exception:
+                image = torch.zeros(3, IMAGE_SIZE, IMAGE_SIZE)
+        else:
+            image = torch.zeros(3, IMAGE_SIZE, IMAGE_SIZE)
+        return seq, image, self.labels[idx], has_image
+
+
+# Image transforms
+train_transform = transforms.Compose([
+    transforms.Resize((IMAGE_SIZE, IMAGE_SIZE)),
+    transforms.RandomHorizontalFlip(),
+    transforms.RandomRotation(10),
+    transforms.ColorJitter(brightness=0.2, contrast=0.2),
+    transforms.ToTensor(),
+    transforms.Normalize([0.485, 0.456, 0.406], [0.229, 0.224, 0.225]),
+])
+test_transform = transforms.Compose([
+    transforms.Resize((IMAGE_SIZE, IMAGE_SIZE)),
+    transforms.ToTensor(),
+    transforms.Normalize([0.485, 0.456, 0.406], [0.229, 0.224, 0.225]),
+])
+
+print("Dataset classes defined.")

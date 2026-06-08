@@ -1,0 +1,426 @@
+0.00s - Debugger warning: It seems that frozen modules are being used, which may
+0.00s - make the debugger miss breakpoints. Please pass -Xfrozen_modules=off
+0.00s - to python to disable frozen modules.
+0.00s - Note: Debugging will proceed. Set PYDEVD_DISABLE_FILE_VALIDATION=1 to disable this validation.
+0.00s - Debugger warning: It seems that frozen modules are being used, which may
+0.00s - make the debugger miss breakpoints. Please pass -Xfrozen_modules=off
+0.00s - to python to disable frozen modules.
+0.00s - Note: Debugging will proceed. Set PYDEVD_DISABLE_FILE_VALIDATION=1 to disable this validation.
+Device: cuda
+GPU: Tesla T4
+CSV found: /kaggle/input/datasets/hyunsungha/ff-multimodal-csv/FF_Multimodal.csv
+Image dirs found: 30 BATCH folders
+Base dirs: ['/kaggle/input/datasets/ramyharik/ff-2023-12-12-multi-modal-dataset-16']
+ON_KAGGLE: True
+Sensor features: 22
+Loading CSV...
+Raw shape: (166001, 51)
+Columns: ['time', 'Q_VFD1_Temperature', 'Q_VFD2_Temperature', 'Q_VFD3_Temperature', 'Q_VFD4_Temperature', 'M_Conv1_Speed_mmps', 'M_Conv2_Speed_mmps', 'M_Conv3_Speed_mmps', 'M_Conv4_Speed_mmps', 'I_R01_Gripper_Pot', 'I_R01_Gripper_Load', 'I_R02_Gripper_Pot', 'I_R02_Gripper_Load', 'I_R03_Gripper_Pot', 'I_R03_Gripper_Load', 'I_R04_Gripper_Pot', 'I_R04_Gripper_Load', 'M_R01_SJointAngle_Degree', 'M_R01_LJointAngle_Degree', 'M_R01_UJointAngle_Degree', 'M_R01_RJointAngle_Degree', 'M_R01_BJointAngle_Degree', 'M_R01_TJointAngle_Degree', 'M_R02_SJointAngle_Degree', 'M_R02_LJointAngle_Degree', 'M_R02_UJointAngle_Degree', 'M_R02_RJointAngle_Degree', 'M_R02_BJointAngle_Degree', 'M_R02_TJointAngle_Degree', 'M_R03_SJointAngle_Degree', 'M_R03_LJointAngle_Degree', 'M_R03_UJointAngle_Degree', 'M_R03_RJointAngle_Degree', 'M_R03_BJointAngle_Degree', 'M_R03_TJointAngle_Degree', 'M_R04_SJointAngle_Degree', 'M_R04_LJointAngle_Degree', 'M_R04_UJointAngle_Degree', 'M_R04_RJointAngle_Degree', 'M_R04_BJointAngle_Degree', 'M_R04_TJointAngle_Degree', 'I_SafetyDoor1_Status', 'I_SafetyDoor2_Status', 'Q_Cell_CycleCount', 'I_MHS_GreenRocketTray', 'Cam1', 'Cam2', 'Description', 'CycleState', 'Cycle_Count_New', 'actual_state']
+Cleaned shape: (165932, 53)
+
+Classes (5): ['NoBody1', 'NoNose', 'NoNose_NoBody2', 'NoNose_NoBody2_NoBody1', 'Normal']
+
+Label distribution:
+label
+Normal                    90775
+NoNose_NoBody2_NoBody1    26628
+NoNose_NoBody2            25206
+NoNose                    19307
+NoBody1                    4016
+Name: count, dtype: int64
+Train: 132950 samples (228 cycles)
+Test:  32982 samples (57 cycles)
+
+Train labels:
+label
+Normal                    73230
+NoNose_NoBody2_NoBody1    22146
+NoNose_NoBody2            20262
+NoNose                    13987
+NoBody1                    3325
+Name: count, dtype: int64
+
+Test labels:
+label
+Normal                    17545
+NoNose                     5320
+NoNose_NoBody2             4944
+NoNose_NoBody2_NoBody1     4482
+NoBody1                     691
+Name: count, dtype: int64
+Creating sequences...
+Train: (121550, 50, 22)  Test: (30132, 50, 22)
+
+Class weights: [3.4095005989074707, 0.6262698173522949, 0.43077296018600464, 0.3941263258457184, 0.1393299102783203]
+BATCH folders found: 30
+Base directories: ['/kaggle/input/datasets/ramyharik/ff-2023-12-12-multi-modal-dataset-16']
+
+Image-eligible rows (state 4,9): 53881
+Sample test: Cam1 10/10, Cam2 10/10 matched
+Resolving all image paths (Cam1 + Cam2)...
+Both-camera rows: 9542
+Image dataset ready (2 cameras): 9542 samples
+
+HAS_IMAGES = True
+=== CycleState 분포 (전체) ===
+CycleState
+1      6216
+2      4147
+3       871
+4      7181
+5      2844
+6      2905
+7      2842
+8     37921
+9     46700
+10     6127
+11     4810
+12     5863
+13     4109
+14     4765
+15     5606
+16     6137
+17     4730
+18     4435
+19     3058
+20     3769
+21      896
+
+=== Cam1 이미지 경로가 있는 CycleState ===
+CycleState
+1      6216
+2      4147
+3       871
+4      7181
+5      2844
+6      2905
+7      2842
+8     37921
+9     46700
+10     6127
+11     4810
+12     5863
+13     4109
+14     4765
+15     5606
+16     6137
+17     4730
+18     4435
+19     3058
+20     3769
+21      896
+
+=== CycleState별 이미지 수 ===
+  State 4: 총 1449장  →  {'Normal': 1449}
+  State 9: 총 8093장  →  {'NoNose': 5949, 'NoNose_NoBody2': 2144}
+Dataset classes defined.
+Models defined.
+Training functions ready.
+
+============================================================
+ sensor_bilstm | Trainable params: 567,685
+============================================================
+Epoch  1/20 | Train Loss: 0.3396 Acc: 0.8768 | Val Loss: 0.3843 F1: 0.9043 | 19.5s
+Epoch  2/20 | Train Loss: 0.1948 Acc: 0.9331 | Val Loss: 0.3522 F1: 0.9081 | 18.6s
+Epoch  3/20 | Train Loss: 0.1575 Acc: 0.9472 | Val Loss: 0.3732 F1: 0.9079 | 18.8s
+Epoch  4/20 | Train Loss: 0.1339 Acc: 0.9554 | Val Loss: 0.3659 F1: 0.9045 | 18.7s
+Epoch  5/20 | Train Loss: 0.1148 Acc: 0.9627 | Val Loss: 0.3308 F1: 0.9108 | 18.8s
+Epoch  6/20 | Train Loss: 0.0977 Acc: 0.9690 | Val Loss: 0.4298 F1: 0.9053 | 18.7s
+Epoch  7/20 | Train Loss: 0.0811 Acc: 0.9748 | Val Loss: 0.4862 F1: 0.8967 | 18.9s
+Epoch  8/20 | Train Loss: 0.0716 Acc: 0.9801 | Val Loss: 0.5760 F1: 0.9025 | 18.9s
+Epoch  9/20 | Train Loss: 0.0652 Acc: 0.9824 | Val Loss: 0.5823 F1: 0.8939 | 18.7s
+Epoch 10/20 | Train Loss: 0.0596 Acc: 0.9850 | Val Loss: 0.4942 F1: 0.9123 | 18.7s
+Epoch 11/20 | Train Loss: 0.0577 Acc: 0.9857 | Val Loss: 0.5744 F1: 0.9025 | 18.7s
+Epoch 12/20 | Train Loss: 0.0288 Acc: 0.9933 | Val Loss: 0.5639 F1: 0.9121 | 18.6s
+Epoch 13/20 | Train Loss: 0.0283 Acc: 0.9935 | Val Loss: 0.5499 F1: 0.9121 | 18.7s
+Epoch 14/20 | Train Loss: 0.0314 Acc: 0.9934 | Val Loss: 0.6915 F1: 0.9000 | 18.6s
+Epoch 15/20 | Train Loss: 0.0329 Acc: 0.9931 | Val Loss: 0.6024 F1: 0.9131 | 18.7s
+Epoch 16/20 | Train Loss: 0.0308 Acc: 0.9932 | Val Loss: 0.6069 F1: 0.9125 | 18.7s
+Epoch 17/20 | Train Loss: 0.0332 Acc: 0.9930 | Val Loss: 0.5157 F1: 0.9163 | 18.8s
+Epoch 18/20 | Train Loss: 0.0155 Acc: 0.9964 | Val Loss: 0.5606 F1: 0.9215 | 18.8s
+Epoch 19/20 | Train Loss: 0.0164 Acc: 0.9964 | Val Loss: 0.7265 F1: 0.9110 | 18.8s
+Epoch 20/20 | Train Loss: 0.0187 Acc: 0.9963 | Val Loss: 0.5891 F1: 0.9188 | 18.9s
+
+--- sensor_bilstm Final Results ---
+Accuracy:  0.9224
+Precision: 0.9225
+Recall:    0.9224
+F1-Score:  0.9215
+                        precision    recall  f1-score   support
+
+               NoBody1       0.88      0.96      0.92       529
+                NoNose       0.91      0.96      0.94      5320
+        NoNose_NoBody2       0.88      0.95      0.91      4944
+NoNose_NoBody2_NoBody1       0.87      0.76      0.81      4482
+                Normal       0.96      0.95      0.95     14857
+
+              accuracy                           0.92     30132
+             macro avg       0.90      0.92      0.91     30132
+          weighted avg       0.92      0.92      0.92     30132
+
+이미지 클래스 분포: {np.int64(4): 1141, np.int64(1): 4245, np.int64(2): 1810}
+이미지 전용 class weights: [2.4979212284088135, 0.0005884384736418724, 0.0013800669694319367, 2.4979212284088135, 0.002189238555729389]
+Downloading: "https://download.pytorch.org/models/resnet18-f37072fd.pth" to /root/.cache/torch/hub/checkpoints/resnet18-f37072fd.pth
+  0%|          | 0.00/44.7M [00:00<?, ?B/s]
+  0%|          | 0.00/44.7M [00:00<?, ?B/s] 19%|█▉        | 8.50M/44.7M [00:00<00:00, 89.0MB/s]
+ 19%|█▉        | 8.50M/44.7M [00:00<00:00, 89.0MB/s] 71%|███████   | 31.6M/44.7M [00:00<00:00, 179MB/s] 
+ 71%|███████   | 31.6M/44.7M [00:00<00:00, 179MB/s] 100%|██████████| 44.7M/44.7M [00:00<00:00, 180MB/s]
+100%|██████████| 44.7M/44.7M [00:00<00:00, 180MB/s]
+
+
+
+============================================================
+ image_resnet18 | Trainable params: 11,242,821
+============================================================
+Epoch  1/20 | Train Loss: 0.5887 Acc: 0.5600 | Val Loss: 0.5148 F1: 0.7928 | 384.8s
+Epoch  2/20 | Train Loss: 0.5008 Acc: 0.5952 | Val Loss: 0.5408 F1: 0.7928 | 328.1s
+Epoch  3/20 | Train Loss: 0.5067 Acc: 0.5899 | Val Loss: 0.5628 F1: 0.4680 | 300.1s
+Epoch  4/20 | Train Loss: 0.4902 Acc: 0.5814 | Val Loss: 0.5756 F1: 0.1714 | 317.3s
+Epoch  5/20 | Train Loss: 0.4842 Acc: 0.6034 | Val Loss: 0.6143 F1: 0.1714 | 300.6s
+Epoch  6/20 | Train Loss: 0.4812 Acc: 0.6010 | Val Loss: 0.5790 F1: 0.1714 | 325.2s
+Epoch  7/20 | Train Loss: 0.4844 Acc: 0.5987 | Val Loss: 0.5588 F1: 0.7533 | 299.1s
+Epoch  8/20 | Train Loss: 0.4738 Acc: 0.6235 | Val Loss: 0.5816 F1: 0.2499 | 305.8s
+Epoch  9/20 | Train Loss: 0.4791 Acc: 0.5945 | Val Loss: 0.5510 F1: 0.7925 | 299.0s
+Epoch 10/20 | Train Loss: 0.4672 Acc: 0.6297 | Val Loss: 4.2712 F1: 0.0465 | 297.5s
+Epoch 11/20 | Train Loss: 0.2461 Acc: 0.8865 | Val Loss: 0.5152 F1: 0.9142 | 306.5s
+Epoch 12/20 | Train Loss: 0.0849 Acc: 0.9723 | Val Loss: 0.5981 F1: 0.9135 | 309.9s
+Epoch 13/20 | Train Loss: 0.0612 Acc: 0.9837 | Val Loss: 0.5518 F1: 0.9153 | 299.1s
+Epoch 14/20 | Train Loss: 0.0181 Acc: 0.9950 | Val Loss: 1.1191 F1: 0.9142 | 310.8s
+Epoch 15/20 | Train Loss: 0.0117 Acc: 0.9960 | Val Loss: 0.8648 F1: 0.9308 | 322.3s
+Epoch 16/20 | Train Loss: 0.0190 Acc: 0.9950 | Val Loss: 0.8259 F1: 0.9212 | 302.8s
+Epoch 17/20 | Train Loss: 0.0101 Acc: 0.9968 | Val Loss: 1.0154 F1: 0.9164 | 305.6s
+Epoch 18/20 | Train Loss: 0.0108 Acc: 0.9965 | Val Loss: 0.7258 F1: 0.9289 | 315.0s
+Epoch 19/20 | Train Loss: 0.0095 Acc: 0.9965 | Val Loss: 1.1594 F1: 0.8954 | 299.8s
+Epoch 20/20 | Train Loss: 0.0065 Acc: 0.9985 | Val Loss: 0.9905 F1: 0.9315 | 307.0s
+
+--- image_resnet18 Final Results ---
+Accuracy:  0.9258
+Precision: 0.9512
+Recall:    0.9258
+F1-Score:  0.9315
+                        precision    recall  f1-score   support
+
+               NoBody1       0.00      0.00      0.00         0
+                NoNose       1.00      0.90      0.95      1704
+        NoNose_NoBody2       0.66      1.00      0.79       334
+NoNose_NoBody2_NoBody1       0.00      0.00      0.00         0
+                Normal       1.00      1.00      1.00       308
+
+              accuracy                           0.93      2346
+             macro avg       0.53      0.58      0.55      2346
+          weighted avg       0.95      0.93      0.93      2346
+
+Creating multimodal dataset...
+Train: (39624, 50, 22), images(cam1): 6733, images(cam2): 6733
+Test:  (9521, 50, 22), images(cam1): 2161, images(cam2): 2161
+Fusion class dist: {4: 20342, 1: 4579, 2: 6871, 0: 328, 3: 7504}
+Fusion class weights: [4.240153789520264, 0.3037279546260834, 0.20241163671016693, 0.18533720076084137, 0.06836940348148346]
+
+============================================================
+ fusion_dlf | Trainable params: 198,149
+============================================================
+Epoch  1/20 | Train Loss: 0.0530 Acc: 0.9910 | Val Loss: 0.9094 F1: 0.8686 | 304.2s
+Epoch  2/20 | Train Loss: 0.0319 Acc: 0.9934 | Val Loss: 1.0259 F1: 0.8671 | 304.1s
+Epoch  3/20 | Train Loss: 0.0283 Acc: 0.9937 | Val Loss: 0.9567 F1: 0.8678 | 302.7s
+Epoch  4/20 | Train Loss: 0.0273 Acc: 0.9935 | Val Loss: 1.1236 F1: 0.8650 | 303.5s
+Epoch  5/20 | Train Loss: 0.0255 Acc: 0.9942 | Val Loss: 1.0167 F1: 0.8674 | 303.9s
+Epoch  6/20 | Train Loss: 0.0232 Acc: 0.9942 | Val Loss: 1.1148 F1: 0.8690 | 302.8s
+Epoch  7/20 | Train Loss: 0.0273 Acc: 0.9939 | Val Loss: 1.0527 F1: 0.8677 | 304.9s
+Epoch  8/20 | Train Loss: 0.0220 Acc: 0.9947 | Val Loss: 1.0452 F1: 0.8653 | 302.0s
+Epoch  9/20 | Train Loss: 0.0248 Acc: 0.9949 | Val Loss: 0.9696 F1: 0.8688 | 300.9s
+Epoch 10/20 | Train Loss: 0.0197 Acc: 0.9949 | Val Loss: 1.0186 F1: 0.8619 | 301.3s
+Epoch 11/20 | Train Loss: 0.0204 Acc: 0.9948 | Val Loss: 0.9763 F1: 0.8673 | 305.7s
+Epoch 12/20 | Train Loss: 0.0220 Acc: 0.9948 | Val Loss: 0.9641 F1: 0.8655 | 304.4s
+Epoch 13/20 | Train Loss: 0.0230 Acc: 0.9953 | Val Loss: 0.9296 F1: 0.8627 | 303.2s
+Epoch 14/20 | Train Loss: 0.0171 Acc: 0.9951 | Val Loss: 0.9510 F1: 0.8693 | 305.4s
+Epoch 15/20 | Train Loss: 0.0175 Acc: 0.9955 | Val Loss: 0.9714 F1: 0.8692 | 305.0s
+Epoch 16/20 | Train Loss: 0.0174 Acc: 0.9956 | Val Loss: 0.9338 F1: 0.8667 | 304.7s
+Epoch 17/20 | Train Loss: 0.0194 Acc: 0.9945 | Val Loss: 0.9650 F1: 0.8665 | 301.8s
+Epoch 18/20 | Train Loss: 0.0195 Acc: 0.9949 | Val Loss: 1.0039 F1: 0.8666 | 303.3s
+Epoch 19/20 | Train Loss: 0.0163 Acc: 0.9953 | Val Loss: 1.0103 F1: 0.8670 | 300.6s
+Epoch 20/20 | Train Loss: 0.0175 Acc: 0.9958 | Val Loss: 0.9971 F1: 0.8690 | 302.7s
+
+--- fusion_dlf Final Results ---
+Accuracy:  0.8736
+Precision: 0.8681
+Recall:    0.8736
+F1-Score:  0.8693
+                        precision    recall  f1-score   support
+
+               NoBody1       0.74      0.61      0.67        57
+                NoNose       0.98      0.98      0.98      1704
+        NoNose_NoBody2       0.82      0.92      0.86      1670
+NoNose_NoBody2_NoBody1       0.66      0.54      0.59      1480
+                Normal       0.92      0.93      0.92      4610
+
+              accuracy                           0.87      9521
+             macro avg       0.82      0.80      0.81      9521
+          weighted avg       0.87      0.87      0.87      9521
+
+
+============================================================
+ fusion_crossattn | Trainable params: 593,413
+============================================================
+Epoch  1/20 | Train Loss: 0.0502 Acc: 0.9921 | Val Loss: 0.9391 F1: 0.8629 | 305.3s
+Epoch  2/20 | Train Loss: 0.0243 Acc: 0.9951 | Val Loss: 1.0491 F1: 0.8703 | 304.2s
+Epoch  3/20 | Train Loss: 0.0252 Acc: 0.9946 | Val Loss: 0.9967 F1: 0.8661 | 309.8s
+Epoch  4/20 | Train Loss: 0.0256 Acc: 0.9951 | Val Loss: 0.9869 F1: 0.8662 | 307.2s
+Epoch  5/20 | Train Loss: 0.0225 Acc: 0.9949 | Val Loss: 1.0010 F1: 0.8680 | 304.8s
+Epoch  6/20 | Train Loss: 0.0235 Acc: 0.9944 | Val Loss: 0.9825 F1: 0.8645 | 305.1s
+Epoch  7/20 | Train Loss: 0.0221 Acc: 0.9946 | Val Loss: 1.0285 F1: 0.8687 | 305.8s
+Epoch  8/20 | Train Loss: 0.0215 Acc: 0.9953 | Val Loss: 1.0000 F1: 0.8665 | 304.9s
+Epoch  9/20 | Train Loss: 0.0185 Acc: 0.9949 | Val Loss: 0.9737 F1: 0.8657 | 305.6s
+Epoch 10/20 | Train Loss: 0.0216 Acc: 0.9948 | Val Loss: 0.9447 F1: 0.8626 | 306.9s
+Epoch 11/20 | Train Loss: 0.0188 Acc: 0.9950 | Val Loss: 0.9558 F1: 0.8658 | 305.9s
+Epoch 12/20 | Train Loss: 0.0174 Acc: 0.9957 | Val Loss: 0.8924 F1: 0.8635 | 304.1s
+Early stopping at epoch 12
+
+--- fusion_crossattn Final Results ---
+Accuracy:  0.8750
+Precision: 0.8695
+Recall:    0.8750
+F1-Score:  0.8703
+                        precision    recall  f1-score   support
+
+               NoBody1       0.76      0.60      0.67        57
+                NoNose       0.98      0.98      0.98      1704
+        NoNose_NoBody2       0.82      0.93      0.87      1670
+NoNose_NoBody2_NoBody1       0.67      0.53      0.59      1480
+                Normal       0.92      0.93      0.92      4610
+
+              accuracy                           0.88      9521
+             macro avg       0.83      0.79      0.81      9521
+          weighted avg       0.87      0.88      0.87      9521
+
+
+========================================================================
+ FAIR COMPARISON  (all models on the SAME cycle 4·9 test set)
+========================================================================
+Model                           Accuracy Precision    Recall        F1
+------------------------------------------------------------------------
+Sensor@cyc4_9                     0.8763    0.8707    0.8763    0.8710
+Image@cyc4_9                      0.6807    0.5942    0.6807    0.5929
+Fusion-Concat                     0.8736    0.8681    0.8736    0.8693
+Fusion-CrossAttn                  0.8750    0.8695    0.8750    0.8703
+========================================================================
+
+[GOAL] 센서@cyc4_9 F1=0.8710 | best Fusion F1=0.8703 | not yet
+
+========================================================================
+ DECISION-LEVEL FUSION (late) | best image weight w=0.50 (tuned on train)
+========================================================================
+Sensor@cyc4_9      F1 : 0.8710
+Fusion-Concat      F1 : 0.8693
+Decision-Fusion    F1 : 0.8602   (img-present 2161/9521)
+========================================================================
+[GOAL-DLF] not yet
+========================================================================
+이미지 존재 시점: 2161/9521 (22.7%)
+================================================================
+ [이미지 존재 구간만] 멀티모달 이득 검증
+================================================================
+Sensor             F1 : 0.9739
+Image (2 cameras)  F1 : 0.9285
+Fusion-Concat      F1 : 0.9814
+Fusion-CrossAttn   F1 : 0.9801
+Decision-Fusion    F1 : 0.9277
+================================================================
+best Fusion 0.9814  vs  best Single 0.9739  ->  *** 멀티모달 이득 O (Fusion > 둘 다) ***
+
+=== 이미지 약화 학습 (3 epochs) ===
+
+============================================================
+ image_weak | Trainable params: 11,242,821
+============================================================
+Epoch  1/3 | Train Loss: 0.5916 Acc: 0.5513 | Val Loss: 0.5444 F1: 0.7928 | 297.7s
+Epoch  2/3 | Train Loss: 0.5000 Acc: 0.5819 | Val Loss: 0.6179 F1: 0.1714 | 317.4s
+Epoch  3/3 | Train Loss: 0.4959 Acc: 0.5862 | Val Loss: 0.5782 F1: 0.1714 | 303.2s
+
+--- image_weak Final Results ---
+Accuracy:  0.8576
+Precision: 0.7386
+Recall:    0.8576
+F1-Score:  0.7928
+                        precision    recall  f1-score   support
+
+               NoBody1       0.00      0.00      0.00         0
+                NoNose       0.84      1.00      0.91      1704
+        NoNose_NoBody2       0.00      0.00      0.00       334
+NoNose_NoBody2_NoBody1       0.00      0.00      0.00         0
+                Normal       1.00      1.00      1.00       308
+
+              accuracy                           0.86      2346
+             macro avg       0.37      0.40      0.38      2346
+          weighted avg       0.74      0.86      0.79      2346
+
+================================================================
+ [통제실험] 이미지 약화(3ep) · 이미지 존재 구간 · DLF w=0.95
+================================================================
+Sensor              F1 : 0.9739
+Image (weak, 2cam)  F1 : 0.7751
+Decision-Fusion     F1 : 0.9784
+================================================================
+*** 멀티모달 이득 O: Fusion > 두 단독 ***
+
+============================================================
+ sensor_weak | Trainable params: 43,909
+============================================================
+Epoch  1/3 | Train Loss: 0.3752 Acc: 0.8687 | Val Loss: 0.3881 F1: 0.9041 | 19.8s
+Epoch  2/3 | Train Loss: 0.2121 Acc: 0.9295 | Val Loss: 0.4587 F1: 0.8921 | 20.1s
+Epoch  3/3 | Train Loss: 0.1742 Acc: 0.9438 | Val Loss: 0.4100 F1: 0.9127 | 20.0s
+
+--- sensor_weak Final Results ---
+Accuracy:  0.9133
+Precision: 0.9147
+Recall:    0.9133
+F1-Score:  0.9127
+                        precision    recall  f1-score   support
+
+               NoBody1       0.86      0.94      0.90       529
+                NoNose       0.88      0.93      0.90      5320
+        NoNose_NoBody2       0.85      0.95      0.90      4944
+NoNose_NoBody2_NoBody1       0.89      0.76      0.82      4482
+                Normal       0.96      0.94      0.95     14857
+
+              accuracy                           0.91     30132
+             macro avg       0.89      0.90      0.90     30132
+          weighted avg       0.91      0.91      0.91     30132
+
+================================================================
+ [균형 통제] 센서 약화(h32,3ep) + 이미지 약화 · 이미지 존재 구간 (w=0.95)
+================================================================
+Sensor (weak)    F1 : 0.9555
+Image  (weak)    F1 : 0.7751
+Decision-Fusion  F1 : 0.9675
+================================================================
+*** 균형 상태에서 멀티모달 이득 O ***
+Fusion - Sensor F1 차이: 평균 -0.0463, 95% CI [-0.0557, -0.0374]
+→ 통계적으로 유의하지 않음 (CI가 0 포함)
+
+======================================================================
+ FINAL RESULTS SUMMARY
+======================================================================
+Model                       Accuracy  Precision     Recall         F1
+----------------------------------------------------------------------
+Sensor (BiLSTM)               0.9224     0.9225     0.9224     0.9215
+Image (ResNet18)              0.9258     0.9512     0.9258     0.9315
+Fusion-Concat                 0.8736     0.8681     0.8736     0.8693
+Fusion-CrossAttn              0.8750     0.8695     0.8750     0.8703
+======================================================================
+
+Done!
+/usr/local/lib/python3.12/dist-packages/mistune.py:435: SyntaxWarning: invalid escape sequence '\|'
+  cells[i][c] = re.sub('\\\\\|', '|', cell)
+/usr/local/lib/python3.12/dist-packages/nbconvert/filters/filter_links.py:36: SyntaxWarning: invalid escape sequence '\_'
+  text = re.sub(r'_', '\_', text) # Escape underscores in display text
+[NbConvertApp] Converting notebook __notebook__.ipynb to notebook
+[NbConvertApp] Writing 2193025 bytes to __notebook__.ipynb
+[NbConvertApp] Converting notebook __notebook__.ipynb to html
+[NbConvertApp] Support files will be in __results___files/
+[NbConvertApp] Making directory __results___files
+[NbConvertApp] Making directory __results___files
+[NbConvertApp] Making directory __results___files
+[NbConvertApp] Making directory __results___files
+[NbConvertApp] Making directory __results___files
+[NbConvertApp] Making directory __results___files
+[NbConvertApp] Writing 588188 bytes to __results__.html
