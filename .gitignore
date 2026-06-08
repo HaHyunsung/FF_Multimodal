@@ -26,5 +26,3 @@ Thumbs.db
 # Claude
 .claude/
 
-# PDF (reference paper)
-*.pdf
