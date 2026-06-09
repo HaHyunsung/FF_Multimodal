@@ -26,3 +26,12 @@ Thumbs.db
 # Claude
 .claude/
 
+
+# Render captures / temp (안 올림)
+_qa/
+_qa_iter6/
+_archive*/
+_*_dump*.txt
+_ppt_dump_current.txt
+~$*
+

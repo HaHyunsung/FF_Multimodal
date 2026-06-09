@@ -1,0 +1,75 @@
+### iter6 (Version 2) — 이미지 LR 1e-4 안정화 재학습 결과
+### Kaggle kimjoohoen 노트북 v2, 런타임 9h54m (GPU T4x2), 2026-06-08 실행
+### 출처: Kaggle Logs 탭 전체 출력에서 핵심 블록 발췌
+
+=== 데이터 (V13과 동일) ===
+Both-camera rows: 19234 / Image dataset (2 cameras): 19234 samples
+Test multimodal: (9521, 50, 22), images(cam1): 3912  (이미지 존재 41.1%)
+
+=== Sensor (BiLSTM) — V13과 동일 ===
+Final: Accuracy 0.9224, F1 0.9215
+ NoBody1 0.92 / NoNose 0.94 / NoNose_NoBody2 0.91 / 3부품 0.81 / Normal 0.95
+
+=== Image (ResNet18, LR 1e-4) — ★안정화·대폭 상승★ ===
+학습 val F1: 0.954 0.961 0.946 0.945 0.959 0.955 0.896 0.884 0.956 0.933 0.959 0.902 (early stop ep12)
+Final: Accuracy 0.9609, F1 0.9608
+ NoBody1 1.00 / NoNose 0.95 / NoNose_NoBody2 0.95 / 3부품 1.00 / Normal 1.00
+ (V13에선 Normal·NoBody1=0.00 였음 → LR 수정으로 회복)
+
+=== Fusion-Concat (fusion_dlf) FAIR 9521 ===
+Final: Accuracy 0.9026, F1 0.9001
+ NoBody1 0.71 / NoNose 0.97 / NoNose_NoBody2 0.94 / 3부품 0.71 / Normal 0.92
+
+=== Fusion-CrossAttn FAIR 9521 ===
+Final: F1 0.8710
+
+=== FAIR COMPARISON (동일 cycle 4·9, 9521 시점) ===
+Sensor@cyc4_9      F1 0.8710
+Image@cyc4_9       F1 0.8264   (결측 59% 포함, 그래도 V13 0.41보다 높음=이미지가 강해짐)
+Fusion-Concat      F1 0.9001
+Fusion-CrossAttn   F1 0.8710
+[GOAL] best Fusion 0.9001 >= Sensor 0.8710
+
+=== DECISION-LEVEL FUSION (late), w=0.55 ===
+Sensor@cyc4_9    F1 0.8710
+Fusion-Concat    F1 0.9001
+Decision-Fusion  F1 0.8928 (img-present 3912/9521)
+
+=== ★이미지 존재 구간만 (3912 시점) — 핵심★ ===
+Sensor             F1 0.9074
+Image (2 cameras)  F1 0.9572   (V13 0.925 → 0.957)
+Fusion-Concat      F1 0.9770   (V13 0.921 → 0.977, ★최고 융합★)
+Fusion-CrossAttn   F1 0.9057
+Decision-Fusion    F1 0.9572   (= 이미지와 동일; V13 0.986 → 0.957)
+best Fusion 0.9770 vs best Single 0.9572  → 멀티모달 이득 O (단, 마진 +0.020로 축소)
+
+=== 통제실험: 이미지 약화(3ep), 이미지 존재 구간, DLF w=0.55 ===
+Sensor             F1 0.9074
+Image (weak, 2cam) F1 0.7726
+Decision-Fusion    F1 0.9615   → 이미지 약할 때 융합이 크게 회복 (>둘 다)
+
+=== 균형 통제 (센서 h32/3ep + 이미지 약화), 이미지 존재, w=0.55 ===
+Sensor (weak)    F1 0.9005
+Image (weak)     F1 0.7726
+Decision-Fusion  F1 0.9622   → 균형에서도 융합 우위
+
+=== 부트스트랩 (Decision-Fusion vs Sensor, 이미지 존재 구간) ===
+평균 +0.0498, 95% CI [+0.0392, +0.0601] → 유의함 (CI가 0보다 큼)
+(V13 +0.078 → iter6 +0.050; Decision-Fusion이 0.957로 내려와 마진 축소)
+
+=== 균형 통제 v2 (센서 h16/2ep + 이미지 약화) FAIR 9521 ===
+Sensor (very weak) F1 0.8835
+Image (weak)       F1 0.7505
+Decision-Fusion    F1 0.9119 (w=0.55)  → FAIR 전체 이득 O
+[보조] 이미지 존재 구간: Sensor 0.9131 / Image 0.7726 / Decision-Fusion 0.9767
+
+=== FINAL RESULTS SUMMARY ===
+Sensor (BiLSTM)    Acc 0.9224  F1 0.9215
+Image (ResNet18)   Acc 0.9609  F1 0.9608   (★V13 0.80 → 0.96★)
+Fusion-Concat      Acc 0.9026  F1 0.9001
+Fusion-CrossAttn   Acc 0.8759  F1 0.8710
+
+### 해석 요약 ###
+- LR 1e-4로 이미지 학습 안정화 성공: val F1 출렁임 사라지고, V13에서 0.00이던 Normal·NoBody1 회복 → 이미지 0.96 (논문 ~0.97과 일치, 정상).
+- 부작용: 이미지가 강해져 이미지 존재 구간 융합 이득이 +0.061 → +0.020로 축소. 최고 융합이 Decision-Fusion(V13)→Fusion-Concat(iter6)로 바뀌고, Decision-Fusion은 이미지와 동일.
+- 그러나 통제실험(이미지 약화 시 융합 0.96 ≫ 이미지 0.77)이 "융합은 최고 모달리티 밑으로 안 떨어지고 이미지 열화 시 크게 회복"이라는 견고성 서사를 더 깔끔히 입증.
