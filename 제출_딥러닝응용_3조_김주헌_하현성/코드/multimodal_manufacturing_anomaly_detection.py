@@ -1,6 +1,5 @@
 # -*- coding: utf-8 -*-
-# 멀티모달 제조 공정 이상탐지 — 최종 코드 (iter6) | 3조 김주헌·하현성
-# 출처 노트북: https://www.kaggle.com/code/kimjoohoen/multimodal-deep-learning-for-manufacturing-anomaly
+# 멀티모달 제조 공정 이상탐지 — 최종 코드 (val/test 분리 + 분류예시 2x2) | 3조 김주헌·하현성
 
 
 # # Multimodal Deep Learning for Manufacturing Anomaly Detection
@@ -23,6 +22,8 @@
 # 2. `ramyharik/ff-2023-12-12-multi-modal-dataset-16` - 이미지 파트 1
 # 
 # Settings > Accelerator > **GPU T4 x2** 로 설정 후 실행
+# 
+# > ※ 이미지는 **2개 파트** 사용: `ff-2023-12-12-multi-modal-dataset-16` **및 `-26`** 모두 Add Input 필요.
 
 
 # ## 1. Setup & Configuration
@@ -188,6 +189,8 @@ plt.show()
 
 
 # ## 3. Preprocessing
+# 
+# > (2차 개선) **cycle 단위 train/val/test = 70/10/20** — early stopping은 val로만, test는 최종 평가 전용.
 
 # 센서 정규화
 scaler = StandardScaler()
@@ -204,10 +207,20 @@ train_cycles, test_cycles = train_test_split(
     stratify=[cycle_has_anomaly[c] for c in cycles],
 )
 
+# (2차 개선) 검증(val) 사이클 분리: train의 12.5%를 val로 → 최종 70/10/20 (cycle 단위)
+# - early stopping·모델 선택은 val로만 수행, test는 "최종 평가 전용" (val/test 분리 엄밀화)
+# - test 분할은 기존과 동일(SEED 고정)하므로 이전 결과와 비교 가능
+train_cycles, val_cycles = train_test_split(
+    train_cycles, test_size=0.125, random_state=SEED,
+    stratify=[cycle_has_anomaly[c] for c in train_cycles],
+)
+
 train_df = df[df["Cycle_Count_New"].isin(train_cycles)].reset_index(drop=True)
+val_df = df[df["Cycle_Count_New"].isin(val_cycles)].reset_index(drop=True)
 test_df = df[df["Cycle_Count_New"].isin(test_cycles)].reset_index(drop=True)
 
 print(f"Train: {len(train_df)} samples ({len(train_cycles)} cycles)")
+print(f"Val:   {len(val_df)} samples ({len(val_cycles)} cycles)")
 print(f"Test:  {len(test_df)} samples ({len(test_cycles)} cycles)")
 print(f"\nTrain labels:\n{train_df['label'].value_counts()}")
 print(f"\nTest labels:\n{test_df['label'].value_counts()}")
@@ -228,6 +241,7 @@ def create_sequences_by_cycle(data_df, sensor_cols, seq_len):
 
 print("Creating sequences...")
 X_train_seq, y_train_seq = create_sequences_by_cycle(train_df, SENSOR_COLUMNS, SEQUENCE_LENGTH)
+X_val_seq, y_val_seq = create_sequences_by_cycle(val_df, SENSOR_COLUMNS, SEQUENCE_LENGTH)
 X_test_seq, y_test_seq = create_sequences_by_cycle(test_df, SENSOR_COLUMNS, SEQUENCE_LENGTH)
 print(f"Train: {X_train_seq.shape}  Test: {X_test_seq.shape}")
 
@@ -741,7 +755,11 @@ def evaluate_model(model, loader, criterion, model_type):
 
 
 def run_training(model, train_loader, test_loader, model_type, model_name,
-                 epochs=EPOCHS, custom_class_weights=None, lr=LEARNING_RATE):
+                 epochs=EPOCHS, custom_class_weights=None, lr=LEARNING_RATE,
+                 val_loader=None):
+    # (2차 개선) val_loader가 주어지면 early stopping·best 모델 선택은 val로만 수행하고
+    # test_loader는 학습 종료 후 "최종 평가"에만 사용한다 (val/test 분리 엄밀화).
+    eval_loader = val_loader if val_loader is not None else test_loader
     weights = custom_class_weights if custom_class_weights is not None else class_weights
     criterion = nn.CrossEntropyLoss(weight=weights.to(DEVICE))
     optimizer = optim.Adam(
@@ -761,7 +779,7 @@ def run_training(model, train_loader, test_loader, model_type, model_name,
     for epoch in range(1, epochs + 1):
         t0 = time.time()
         train_loss, train_acc = train_epoch(model, train_loader, criterion, optimizer, model_type)
-        val = evaluate_model(model, test_loader, criterion, model_type)
+        val = evaluate_model(model, eval_loader, criterion, model_type)
         scheduler.step(val["loss"])
 
         history["train_loss"].append(train_loss)
@@ -806,14 +824,17 @@ print("Training functions ready.")
 # ## 8. Model 1: Sensor-Only (BiLSTM)
 
 train_sensor_ds = SensorSequenceDataset(X_train_seq, y_train_seq)
+val_sensor_ds = SensorSequenceDataset(X_val_seq, y_val_seq)
 test_sensor_ds = SensorSequenceDataset(X_test_seq, y_test_seq)
 train_sensor_loader = DataLoader(train_sensor_ds, batch_size=BATCH_SIZE, shuffle=True)
+val_sensor_loader = DataLoader(val_sensor_ds, batch_size=BATCH_SIZE)
 test_sensor_loader = DataLoader(test_sensor_ds, batch_size=BATCH_SIZE)
 
 sensor_model = SensorLSTM(input_dim=NUM_SENSOR_FEATURES).to(DEVICE)
 sensor_result, sensor_history = run_training(
     sensor_model, train_sensor_loader, test_sensor_loader,
-    model_type="sensor", model_name="sensor_bilstm"
+    model_type="sensor", model_name="sensor_bilstm",
+    val_loader=val_sensor_loader,
 )
 
 
@@ -821,6 +842,7 @@ sensor_result, sensor_history = run_training(
 
 if HAS_IMAGES:
     df_img_train = df_image[df_image["Cycle_Count_New"].isin(train_cycles)].reset_index(drop=True)
+    df_img_val = df_image[df_image["Cycle_Count_New"].isin(val_cycles)].reset_index(drop=True)
     df_img_test = df_image[df_image["Cycle_Count_New"].isin(test_cycles)].reset_index(drop=True)
 
     train_img_ds = ImageAnomalyDataset(
@@ -835,7 +857,14 @@ if HAS_IMAGES:
         transform=test_transform,
         image_paths2=df_img_test["cam2_path"].tolist(),
     )
+    val_img_ds = ImageAnomalyDataset(
+        df_img_val["cam1_path"].tolist(),
+        df_img_val["label_encoded"].values,
+        transform=test_transform,
+        image_paths2=df_img_val["cam2_path"].tolist(),
+    )
     train_img_loader = DataLoader(train_img_ds, batch_size=BATCH_SIZE, shuffle=True, num_workers=2)
+    val_img_loader = DataLoader(val_img_ds, batch_size=BATCH_SIZE, num_workers=2)
     test_img_loader = DataLoader(test_img_ds, batch_size=BATCH_SIZE, num_workers=2)
 
     # 이미지 데이터셋 전용 class weight 계산 (이게 핵심)
@@ -854,6 +883,7 @@ if HAS_IMAGES:
         image_model, train_img_loader, test_img_loader,
         model_type="image", model_name="image_resnet18",
         custom_class_weights=img_class_weights,
+        val_loader=val_img_loader,
         lr=1e-4,   # iter6: 안정화 fine-tune (ResNet18 전체 FT시 1e-3은 과대 → val F1 출렁)
     )
 else:
@@ -894,6 +924,9 @@ if HAS_IMAGES:
     X_train_mm, img_train, img_train2, y_train_mm = create_multimodal_data(
         train_df, df_img_train, SENSOR_COLUMNS, SEQUENCE_LENGTH
     )
+    X_val_mm, img_val, img_val2, y_val_mm = create_multimodal_data(
+        val_df, df_img_val, SENSOR_COLUMNS, SEQUENCE_LENGTH
+    )
     X_test_mm, img_test, img_test2, y_test_mm = create_multimodal_data(
         test_df, df_img_test, SENSOR_COLUMNS, SEQUENCE_LENGTH
     )
@@ -902,7 +935,9 @@ if HAS_IMAGES:
 
     train_mm_ds = MultimodalDataset(X_train_mm, img_train, y_train_mm, train_transform, image_paths2=img_train2)
     test_mm_ds = MultimodalDataset(X_test_mm, img_test, y_test_mm, test_transform, image_paths2=img_test2)
+    val_mm_ds = MultimodalDataset(X_val_mm, img_val, y_val_mm, test_transform, image_paths2=img_val2)
     train_mm_loader = DataLoader(train_mm_ds, batch_size=BATCH_SIZE, shuffle=True, num_workers=2)
+    val_mm_loader = DataLoader(val_mm_ds, batch_size=BATCH_SIZE, num_workers=2)
     test_mm_loader = DataLoader(test_mm_ds, batch_size=BATCH_SIZE, num_workers=2)
 
     # Fusion 데이터셋(cycle 4·9 시점) 분포 기반 class weight
@@ -928,6 +963,7 @@ if HAS_IMAGES:
         fusion_model, train_mm_loader, test_mm_loader,
         model_type="fusion", model_name="fusion_dlf",
         custom_class_weights=mm_class_weights,
+        val_loader=val_mm_loader,
     )
 
     # --- (개선 Ⓐ) Cross-Attention Fusion ---
@@ -943,6 +979,7 @@ if HAS_IMAGES:
         fusion_attn_model, train_mm_loader, test_mm_loader,
         model_type="fusion", model_name="fusion_crossattn",
         custom_class_weights=mm_class_weights,
+        val_loader=val_mm_loader,
     )
 else:
     print("[SKIP] No image data. Fusion model requires images.")
@@ -981,7 +1018,7 @@ else:
 
 # ============================================================
 # iter4: Decision-Level(Late) 확률 융합 — 학습된 sensor_model + image_model
-# 학습형 fusion head 우회. 이미지 있을 때만 결합, 가중치 w는 train에서 선택(test 누수 방지).
+# 학습형 fusion head 우회. 이미지 있을 때만 결합, 가중치 w는 validation에서 선택(test 누수 방지, 2차 개선).
 # ============================================================
 if HAS_IMAGES:
     @torch.no_grad()
@@ -994,17 +1031,18 @@ if HAS_IMAGES:
             ys.append(y.numpy())
         return np.concatenate(ps), np.concatenate(ys)
 
-    # 멀티모달 train/test 에서 두 단독 모델의 확률 (loader shuffle=False로 정렬 유지)
-    s_tr, y_tr = _softmax_probs(sensor_model,
-        DataLoader(SensorSequenceDataset(X_train_mm, y_train_mm), batch_size=BATCH_SIZE))
-    i_tr, _ = _softmax_probs(image_model,
-        DataLoader(ImageAnomalyDataset(img_train, y_train_mm, test_transform, image_paths2=img_train2), batch_size=BATCH_SIZE, num_workers=2))
+    # (2차 개선) w 선택은 validation 멀티모달 셋에서 (test 누수 방지)
+    s_va, y_va = _softmax_probs(sensor_model,
+        DataLoader(SensorSequenceDataset(X_val_mm, y_val_mm), batch_size=BATCH_SIZE))
+    i_va, _ = _softmax_probs(image_model,
+        DataLoader(ImageAnomalyDataset(img_val, y_val_mm, test_transform, image_paths2=img_val2), batch_size=BATCH_SIZE, num_workers=2))
     s_te, y_te = _softmax_probs(sensor_model,
         DataLoader(SensorSequenceDataset(X_test_mm, y_test_mm), batch_size=BATCH_SIZE))
     i_te, _ = _softmax_probs(image_model,
         DataLoader(ImageAnomalyDataset(img_test, y_test_mm, test_transform, image_paths2=img_test2), batch_size=BATCH_SIZE, num_workers=2))
 
     has_tr = np.array([bool(p) for p in img_train])
+    has_va = np.array([bool(p) for p in img_val])
     has_te = np.array([bool(p) for p in img_test])
 
     def _fuse_f1(s_p, i_p, has, y, w):
@@ -1013,7 +1051,7 @@ if HAS_IMAGES:
         return f1_score(y, p.argmax(1), average="weighted", zero_division=0)
 
     ws = [k / 20 for k in range(21)]
-    best_w = max(ws, key=lambda w: _fuse_f1(s_tr, i_tr, has_tr, y_tr, w))
+    best_w = max(ws, key=lambda w: _fuse_f1(s_va, i_va, has_va, y_va, w))
 
     p_te = s_te.copy()
     p_te[has_te] = (1 - best_w) * s_te[has_te] + best_w * i_te[has_te]
@@ -1026,7 +1064,7 @@ if HAS_IMAGES:
         "preds": dlf_pred, "labels": y_te,
     }
     print("\n" + "=" * 72)
-    print(f" DECISION-LEVEL FUSION (late) | best image weight w={best_w:.2f} (tuned on train)")
+    print(f" DECISION-LEVEL FUSION (late) | best image weight w={best_w:.2f} (tuned on val)")
     print("=" * 72)
     print(f"Sensor@cyc4_9      F1 : {sensor_fair['f1']:.4f}")
     print(f"Fusion-Concat      F1 : {fusion_result['f1']:.4f}")
@@ -1299,7 +1337,7 @@ for i, (name, res) in enumerate(all_results.items()):
                 f"{v:.3f}", ha="center", fontsize=9)
 
 ax.set_ylabel("Score")
-ax.set_title("Model Performance Comparison")
+ax.set_title("Model Performance Comparison (per-model default eval set / fair comparison: see FAIR cells)")
 ax.set_xticks(x + width * (len(all_results)-1)/2)
 ax.set_xticklabels(metric_labels)
 ax.legend()
@@ -1390,11 +1428,11 @@ if HAS_IMAGES:
     _Xm,_ym=X_test_mm[_m],y_test_mm[_m]
     _p1=[img_test[i] for i in _idx]; _p2=[img_test2[i] for i in _idx]
     _ste=_ps(sensor_model,_Xm,_ym); _fsen=_f1(_ym,_ste.argmax(1),average="weighted",zero_division=0)
-    _itr=_np.where(has_tr)[0]
-    _str=_ps(sensor_model,X_train_mm[has_tr],y_train_mm[has_tr])
-    _itrp=_pi(image_model,[img_train[i] for i in _itr],[img_train2[i] for i in _itr],y_train_mm[has_tr],clean_tf)
+    _itr=_np.where(has_va)[0]
+    _str=_ps(sensor_model,X_val_mm[has_va],y_val_mm[has_va])
+    _itrp=_pi(image_model,[img_val[i] for i in _itr],[img_val2[i] for i in _itr],y_val_mm[has_va],clean_tf)
     def _fz(s,i,y,w): return _f1(y,((1-w)*s+w*i).argmax(1),average="weighted",zero_division=0)
-    _bw=max([k/20 for k in range(21)],key=lambda w:_fz(_str,_itrp,y_train_mm[has_tr],w))
+    _bw=max([k/20 for k in range(21)],key=lambda w:_fz(_str,_itrp,y_val_mm[has_va],w))
 
     def run_deg(tf,tag):
         _ite=_pi(image_model,_p1,_p2,_ym,tf)
@@ -1412,3 +1450,92 @@ if HAS_IMAGES:
     print("="*64)
 else:
     print("[SKIP] 이미지 없음")
+
+
+# ## 13. 분류 예시 시각화 — 이미지 + 센서 + 모달리티별 예측 (정답/오답)
+# 
+# 테스트셋(이미지 존재 구간)에서 **정답 사례(정상 Normal 포함, 각 클래스 고루)와 오답 사례**를 뽑아,
+# 한 예시를 **2×2 레이아웃**(위: Cam1·Cam2 이미지 / 아래: 같은 시점 센서 윈도우·융합 클래스별 확률)으로 표시한다.
+# 정답 중 일부는 단독 모델(센서 또는 이미지)이 틀렸으나 융합이 바로잡은 사례이며, 각 패널 제목에 센서·이미지·융합의 예측을 병기한다.
+# 정답/오답을 각각 `classification_correct.png` / `classification_wrong.png`로 저장한다. (★ = 실제 클래스)
+
+# ============================================================
+# [13] 분류 예시 시각화 — 이미지 + 센서 + 모달리티별 예측 (정답/오답, 2x2 레이아웃)
+#   - 각 클래스(Normal 포함) 정답을 1개씩 보장 + 일부는 '융합이 단독오류 보정' 사례
+#   - 한 예시 = 2x2 (위: Cam1/Cam2, 아래: 센서 윈도우/융합 확률), 정답·오답 2장 저장
+# ============================================================
+if HAS_IMAGES:
+    import torch.nn.functional as _F
+    import matplotlib.gridspec as _gridspec
+    from PIL import Image as _PILImage
+
+    _m = np.array([bool(p) for p in img_test]); _idx = np.where(_m)[0]
+    _Xv = X_test_mm[_m]; _yv = y_test_mm[_m]
+    _p1 = [img_test[i] for i in _idx]; _p2 = [img_test2[i] for i in _idx]
+
+    _dl = DataLoader(MultimodalDataset(_Xv, _p1, _yv, test_transform, image_paths2=_p2),
+                     batch_size=BATCH_SIZE, num_workers=2)
+    for _mdl in (sensor_model, image_model, fusion_model): _mdl.eval()
+    _Ps, _Pi, _Pf = [], [], []
+    with torch.no_grad():
+        for _s, _im, _, _hi in _dl:
+            _s, _im, _hi = _s.to(DEVICE), _im.to(DEVICE), _hi.to(DEVICE)
+            _Ps.append(_F.softmax(sensor_model(_s), 1).cpu().numpy())
+            _Pi.append(_F.softmax(image_model(_im), 1).cpu().numpy())
+            _Pf.append(_F.softmax(fusion_model(_s, _im, _hi), 1).cpu().numpy())
+    _Ps, _Pi, _Pf = map(np.concatenate, (_Ps, _Pi, _Pf))
+    _ps, _pi, _pf = _Ps.argmax(1), _Pi.argmax(1), _Pf.argmax(1)
+
+    # 정답: 각 클래스(Normal 포함)에서 1개씩(융합 보정 사례 우선) + 보정 사례로 6개 채움
+    _rng = np.random.default_rng(SEED)
+    _cor = np.where(_pf == _yv)[0]; _wr = np.where(_pf != _yv)[0]
+    _saved = set(i for i in _cor if _ps[i] != _yv[i] or _pi[i] != _yv[i])
+    _sel_c = []
+    for _cls in range(NUM_CLASSES):
+        _cands = [i for i in _cor if _yv[i] == _cls]
+        if not _cands: continue
+        _pool = [i for i in _cands if i in _saved] or _cands
+        _sel_c.append(int(_rng.choice(_pool)))
+    _extra = [i for i in _cor if i in _saved and i not in _sel_c]; _rng.shuffle(_extra)
+    _sel_c = (_sel_c + _extra)[:6]
+    _sel_w = list(_rng.permutation(_wr))[:4]
+
+    _chs = [SENSOR_COLUMNS.index(c) for c in
+            ["I_R04_Gripper_Load", "M_R01_SJointAngle_Degree", "Q_VFD1_Temperature"] if c in SENSOR_COLUMNS]
+
+    def _draw(sel, tag, fname):
+        n = len(sel)
+        if n == 0: return
+        fig = plt.figure(figsize=(11, 5.6 * n))
+        outer = _gridspec.GridSpec(n, 1, hspace=0.5)
+        col = "green" if tag == "CORRECT" else "red"
+        for s, i in enumerate(sel):
+            inr = _gridspec.GridSpecFromSubplotSpec(2, 2, subplot_spec=outer[s], hspace=0.3, wspace=0.18)
+            a = fig.add_subplot(inr[0, 0])
+            try: a.imshow(_PILImage.open(_p1[i]).convert("RGB"))
+            except Exception: pass
+            a.set_title(f"Example {s+1}  [{tag}]   |   Cam1", color=col, fontsize=12, fontweight="bold"); a.axis("off")
+            a = fig.add_subplot(inr[0, 1])
+            try: a.imshow(_PILImage.open(_p2[i]).convert("RGB"))
+            except Exception: pass
+            a.set_title("Cam2", fontsize=12); a.axis("off")
+            a = fig.add_subplot(inr[1, 0])
+            for ci in _chs: a.plot(_Xv[i][:, ci], lw=1.2, label=SENSOR_COLUMNS[ci][:16])
+            a.set_title("Sensor window (50 steps, standardized)", fontsize=10); a.legend(fontsize=8, loc="upper right")
+            a = fig.add_subplot(inr[1, 1])
+            bc = ["#cccccc"] * NUM_CLASSES; bc[_pf[i]] = col
+            a.barh(range(NUM_CLASSES), _Pf[i] * 100, color=bc)
+            a.set_yticks(range(NUM_CLASSES)); a.set_yticklabels(CLASS_NAMES, fontsize=9)
+            a.invert_yaxis(); a.set_xlim(0, 100); a.set_xlabel("Fusion probability (%)", fontsize=10)
+            a.plot(2, _yv[i], marker="*", color="blue", markersize=15)
+            a.set_title(f"Fusion: {CLASS_NAMES[_pf[i]]} {_Pf[i][_pf[i]]*100:.0f}%  (True: {CLASS_NAMES[_yv[i]]})\n"
+                        f"Sensor->{CLASS_NAMES[_ps[i]][:12]} | Image->{CLASS_NAMES[_pi[i]][:12]}", fontsize=9.5, color=col)
+        fig.suptitle(f"{tag} examples   |   bars: green=correct / red=wrong / gray=other,   * (blue) = true class",
+                     fontsize=12, y=1.0)
+        plt.savefig(fname, dpi=140, bbox_inches="tight"); plt.show(); print("saved", fname)
+
+    _draw(_sel_c, "CORRECT", "classification_correct.png")
+    _draw(_sel_w, "WRONG", "classification_wrong.png")
+    print(f"분류 예시 저장 | 정답 {len(_sel_c)}(클래스 커버리지 포함) / 오답 {len(_sel_w)}")
+else:
+    print("[SKIP] No image data.")
